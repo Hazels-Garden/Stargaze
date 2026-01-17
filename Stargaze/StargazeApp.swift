@@ -2,12 +2,13 @@
 //  StargazeApp.swift
 //  Stargaze
 //
-//  Created by Hazel Nishad on 1/10/26.
-//  Copyright © 2026 Hazel's Garden. All rights reserved.
+//  Created by Hazel Nishad on 10/1/26.
+//  Copyright © 2026 Hazel's Garden. Check license for details.
 // 💖✨
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct StargazeApp: App {
@@ -15,5 +16,6 @@ struct StargazeApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: Habit.self)
     }
 }
