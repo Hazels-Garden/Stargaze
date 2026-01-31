@@ -7,15 +7,17 @@
 // 💖✨
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 @main
 struct StargazeApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-        .modelContainer(for: Habit.self)
+  var body: some Scene {
+    WindowGroup {
+      ContentView()
     }
+    //        .modelContainer(for: Habit.self)
+    // TODO: Change this back!!
+    .modelContainer(SampleData.shared.modelContainer)
+  }
 }
