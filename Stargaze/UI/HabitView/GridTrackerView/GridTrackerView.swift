@@ -20,19 +20,21 @@ struct GridTrackerView: View {
   ]
 
   var body: some View {
-    Grid {
-      ForEach(0..<nRows, id: \.self) { r in
-        GridRow {
-          ForEach(0..<nCols, id: \.self) { c in
-            Circle()
-              .frame(width: 5)
-              .foregroundStyle(
-                dayIsComplete
-                  .contains(Point(r: r, c: c)) ? .primary : .tertiary
-              )
-            Spacer()
-              .frame(maxWidth: c == nCols - 1 ? 0 : .infinity)
-              .border(showBorder ? .blue : .clear)
+    ZStack {
+      Grid {
+        ForEach(0..<nRows, id: \.self) { r in
+          GridRow {
+            ForEach(0..<nCols, id: \.self) { c in
+              Circle()
+                .frame(width: 5)
+                .foregroundStyle(
+                  dayIsComplete
+                    .contains(Point(r: r, c: c)) ? .primary : .tertiary
+                )
+              Spacer()
+                .frame(maxWidth: c == nCols - 1 ? 0 : .infinity)
+                .border(showBorder ? .blue : .clear)
+            }
           }
         }
       }
@@ -42,6 +44,7 @@ struct GridTrackerView: View {
       minHeight: 420,
       maxHeight: 420,
     )
+    .drawingGroup()
     .border(showBorder ? .purple : .clear)
   }
 }
