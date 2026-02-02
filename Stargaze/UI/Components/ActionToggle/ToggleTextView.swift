@@ -15,9 +15,10 @@ struct ToggleTextView: View {
   
   var body: some View {
     Text(text)
+      .fontWeight(.bold)
       .SGNormal()
       .fontWidth(.expanded)
-      .frame(minWidth: 190)
+      .frame(minWidth: 200)
   }
 }
 

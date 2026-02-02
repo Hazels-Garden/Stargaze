@@ -10,27 +10,43 @@
 import SwiftUI
 
 struct GradientBackgroundView: View {
-  
+
   let showBorder: Bool
-  let color: UInt
-  
-    var body: some View {
-      RadialGradient(
-        gradient: Gradient(colors: [
-          Color(hex: color),
-          // TODO: Probably a better way to do this
-          Color(hex: color).mix(with: .black, by: 0.3),
-          Color.clear,
-        ]),
-        center: .top,
-        startRadius: 40,
-        endRadius: 400
-      )
-      .edgesIgnoringSafeArea(.all)
-      .border(showBorder ? .green : .clear)
+  let color: [String: Double]
+  @State var startRadius: CGFloat = 0
+  @State var stopRadius: CGFloat = 10
+
+  var body: some View {
+    RadialGradient(
+      gradient: Gradient(colors: [
+        Color(hue: color["hue"]!, saturation: color["sat"]!, brightness: color["bri"]!),
+        Color(hue: color["hue"]!, saturation: color["sat"]!, brightness: color["bri"]! / 1.5),
+        Color.clear,
+      ]),
+      center: .top,
+      startRadius: startRadius,
+      endRadius: stopRadius
+    )
+    .edgesIgnoringSafeArea(.all)
+    .border(showBorder ? .green : .clear)
+    .onAppear {
+      withAnimation {
+        startRadius = 40
+        stopRadius = 400
+      }
     }
+    .onDisappear {
+      withAnimation(.linear(duration: 0)) {
+        startRadius = 0
+        stopRadius = 10
+      }
+    }
+  }
 }
 
 #Preview {
-  GradientBackgroundView(showBorder: false, color: 0xD78725)
+  GradientBackgroundView(
+    showBorder: false,
+    color: ["hue": 0.6167, "sat": 0.91, "bri": 0.82, "opa": 1]
+  )
 }
