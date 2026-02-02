@@ -10,23 +10,23 @@
 import SwiftUI
 
 struct HabitView: View {
-
+  
+  let habit: Habit
   // For debug purposes only. Please turn this off when shipping!
   let showBorder = false
 
   var body: some View {
     ZStack {
-
-      GradientBackgroundView(showBorder: showBorder, color: 0xD78725)
+      GradientBackgroundView(showBorder: showBorder, color: habit.color)
 
       // Main Content
       VStack(spacing: 0) {
-        TitleView(showBorder: showBorder, title: "Watashi wa", desc: "Fem desu")
+        TitleView(showBorder: showBorder, title: habit.title, desc: habit.desc)
 
         GridTrackerView(showBorder: showBorder)
         GridTrackerFooterView(showBorder: showBorder)
 
-        FooterView(showBorder: showBorder)
+        FooterView(color: habit.color, showBorder: showBorder)
       }
       .ignoresSafeArea()
       .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -37,5 +37,5 @@ struct HabitView: View {
 }
 
 #Preview {
-  HabitView()
+  HabitView(habit: Habit())
 }
