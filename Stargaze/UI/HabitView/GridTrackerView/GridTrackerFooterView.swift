@@ -10,36 +10,30 @@
 import SwiftUI
 
 struct GridTrackerFooterView: View {
-  
+
   let showBorder: Bool
-  
-    var body: some View {
+
+  var body: some View {
+    HStack {
       HStack {
-        HStack {
-          Button("Previous Year", systemImage: "chevron.left") {
-            
-          }
-          .labelStyle(.iconOnly)
-          .fontWeight(.bold)
-          .font(.system(size: 13))
-          .foregroundStyle(.secondary)
-          Text("2026").SGMono().foregroundStyle(.secondary)
-          Button("Next Year", systemImage: "chevron.right") {
-            
-          }
-          .labelStyle(.iconOnly)
-          .fontWeight(.bold)
-          .font(.system(size: 13))
-          .foregroundStyle(.secondary)
+        Button("Previous Year", systemImage: "chevron.left") {
+
         }
-        Spacer()
-        Text("320 days left").SGMono().foregroundStyle(.secondary)
+        .buttonStyle(ChevronButton(buttonType: .small))
+        Text("2026").SGMono().foregroundStyle(.secondary)
+        Button("Next Year", systemImage: "chevron.right") {
+
+        }
+        .buttonStyle(ChevronButton(buttonType: .small))
       }
-      .frame(maxWidth: .infinity)
-      .border(showBorder ? .green : .clear)
-      .padding(.top, 16)
-      .border(showBorder ? .purple : .clear)
+      Spacer()
+      Text("320 days left").SGMono().foregroundStyle(.secondary)
     }
+    .frame(maxWidth: .infinity)
+    .border(showBorder ? .green : .clear)
+    .padding(.top, 16)
+    .border(showBorder ? .purple : .clear)
+  }
 }
 
 #Preview {
