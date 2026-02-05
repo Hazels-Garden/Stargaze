@@ -7,23 +7,24 @@
 // 💖✨
 //
 
+import SwiftData
 import SwiftUI
 
+// TODO: add the only dark mode and portrait mode constraints
+
 struct ContentView: View {
+
+  @Environment(\.modelContext) var modelContext
+
   var body: some View {
-    TabView {
-      HabitView()
-      HabitView()
-      HabitView()
-      HabitView()
-      HabitView()
-      HabitView()
+    ZStack {
+      HabitTabView(selection: 0)
     }
     .ignoresSafeArea()
-    .tabViewStyle(.page(indexDisplayMode: .never))
   }
 }
 
 #Preview {
   ContentView()
+    .modelContainer(SampleData.shared.modelContainer)
 }

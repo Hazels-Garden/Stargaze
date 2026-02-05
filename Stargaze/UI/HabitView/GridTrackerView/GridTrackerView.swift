@@ -1,8 +1,8 @@
 //
-//  GridTrackerView.swift
+//  GriedTrackerView.swift
 //  Stargaze
 //
-//  Created by Hazel Nishad on 17/1/26.
+//  Created by Hazel Nishad on 23/1/26.
 //  Copyright © 2026 Hazel's Garden. Check license for details.
 // 💖✨
 //
@@ -14,28 +14,39 @@ struct GridTrackerView: View {
   let showBorder: Bool
   let nRows = 21
   let nCols = 18
+  let starSize = 8.0
   let dayIsComplete: Set = [
     Point(r: 2, c: 0), Point(r: 2, c: 1), Point(r: 0, c: 1), Point(r: 0, c: 0),
     Point(r: 0, c: 4), Point(r: 0, c: 7), Point(r: 1, c: 5),
   ]
 
   var body: some View {
-    ZStack {
-      Grid {
-        ForEach(0..<nRows, id: \.self) { r in
-          GridRow {
-            ForEach(0..<nCols, id: \.self) { c in
-              Circle()
-                .frame(width: 5)
-                .foregroundStyle(
-                  dayIsComplete
-                    .contains(Point(r: r, c: c)) ? .primary : .tertiary
-                )
-              Spacer()
-                .frame(maxWidth: c == nCols - 1 ? 0 : .infinity)
-                .border(showBorder ? .blue : .clear)
-            }
+    Canvas {
+      context,
+      size in
+      var star = context.resolve(Image("Star"))
+      star.shading = .color(Color(.tertiaryLabel))
+      for i in 0..<nRows {
+        for j in 0..<nCols {
+          
+          var starCtx = context
+          
+          if i * nCols + j >= 365 {
+            return
           }
+          
+          let frame = CGRect(
+            origin: CGPoint(
+              x: Double(j) * ((size.width - starSize) / Double(nCols - 1)),
+              y: Double(i) * ((size.height - starSize) / Double(nRows - 1))
+            ),
+            size: CGSize(
+              width: starSize,
+              height: starSize
+            )
+          )
+          starCtx.draw(star, in: frame)
+          
         }
       }
     }
@@ -44,11 +55,10 @@ struct GridTrackerView: View {
       minHeight: 420,
       maxHeight: 420,
     )
-    .drawingGroup()
-    .border(showBorder ? .purple : .clear)
+    .border(showBorder ? Color(.tertiaryLabel) : .clear)
   }
 }
 
 #Preview {
-  GridTrackerView(showBorder: false)
+  GridTrackerView(showBorder: true)
 }
