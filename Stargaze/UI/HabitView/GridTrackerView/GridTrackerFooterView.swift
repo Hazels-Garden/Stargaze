@@ -31,11 +31,10 @@ struct GridTrackerFooterView: View {
     }
     .frame(maxWidth: .infinity)
     .border(showBorder ? .green : .clear)
-    .padding(.top, 16)
     .border(showBorder ? .purple : .clear)
   }
 }
 
 #Preview {
-  GridTrackerFooterView(showBorder: false)
+  GridTrackerFooterView(showBorder: true)
 }
