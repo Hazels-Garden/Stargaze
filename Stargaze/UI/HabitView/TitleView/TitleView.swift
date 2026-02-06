@@ -23,7 +23,7 @@ struct TitleView: View {
         .foregroundStyle(.secondary)
     }
     .border(showBorder ? .purple : .clear)
-    .padding(.top, 32)
+    .padding(.top, -16)
     .frame(maxHeight: .infinity)
     .border(showBorder ? .purple : .clear)
   }
