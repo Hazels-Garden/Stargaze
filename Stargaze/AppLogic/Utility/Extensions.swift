@@ -53,6 +53,27 @@ extension Color {
   }
 }
 
+// Source - https://stackoverflow.com/a/42623106
+// Posted by Adam Smaka
+// Retrieved 2026-02-07, License - CC BY-SA 3.0
+// Date+DayOfYear
+extension Date {
+  var dayOfYear: Int {
+    return Calendar.current.ordinality(of: .day, in: .year, for: self)!
+  }
+}
+
+// Source - https://stackoverflow.com/a/40868784
+// Posted by Ondrej Stocek, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-02-08, License - CC BY-SA 4.0
+// Comparable+Clamped
+extension Comparable {
+  func clamped(to limits: ClosedRange<Self>) -> Self {
+    return min(max(self, limits.lowerBound), limits.upperBound)
+  }
+}
+
+
 
 // Text+Styles
 extension Text {
@@ -79,7 +100,7 @@ extension Text {
 
   func SGNormal() -> some View {
     self
-      .font(.system(size: 13))
+      .font(.system(size: 13).leading(.tight))
       .fontWeight(.semibold)
       .multilineTextAlignment(.center)
   }
