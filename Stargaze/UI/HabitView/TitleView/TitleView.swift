@@ -10,25 +10,36 @@
 import SwiftUI
 
 struct TitleView: View {
-  
+
   let showBorder: Bool
   let title: String
   let desc: String
-  
+
   var body: some View {
-    VStack {
-      Text(title).SGTitle().fontWidth(.expanded)
+    VStack(spacing: 8) {
+      Text(title)
+        .SGTitle()
+        .fontWidth(.expanded)
+        .lineLimit(1)
+      
       Text(desc)
         .SGNormal()
         .foregroundStyle(.secondary)
+        .lineLimit(2)
     }
     .border(showBorder ? .purple : .clear)
-    .padding(.top, -16)
-    .frame(maxHeight: .infinity)
+    .frame(
+      minHeight: 108,
+      maxHeight: 108
+    )
     .border(showBorder ? .purple : .clear)
   }
 }
 
 #Preview {
-  TitleView(showBorder: false, title: "Run 5k", desc: "9:00AM • Run at least 5k everyday")
+  TitleView(
+    showBorder: true,
+    title: "Run 5k",
+    desc: "9:00AM • Run at least 5km"
+  )
 }
