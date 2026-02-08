@@ -19,8 +19,8 @@ struct GradientBackgroundView: View {
   var body: some View {
     RadialGradient(
       gradient: Gradient(colors: [
-        Color(hue: color["hue"]!, saturation: color["sat"]!, brightness: color["bri"]!),
-        Color(hue: color["hue"]!, saturation: color["sat"]!, brightness: color["bri"]! / 1.5),
+        ColorMananger.toColor(color: color),
+        ColorMananger.toColor(color: color, briModifier: 0.67),
         Color.clear,
       ]),
       center: .top,
@@ -32,7 +32,7 @@ struct GradientBackgroundView: View {
     .onAppear {
       withAnimation {
         startRadius = 40
-        stopRadius = 400
+        stopRadius = 360
       }
     }
     .onDisappear {
