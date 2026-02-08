@@ -23,7 +23,7 @@ struct FooterView: View {
         Button("Previous Day", systemImage: "chevron.left") {
 
         }
-        .buttonStyle(ChevronButton(buttonType: .large))
+        .buttonStyle(ChevronButton(buttonType: .large, buttonDir: .leading))
 
         
         Toggle(isOn: $isOn) {
@@ -36,7 +36,7 @@ struct FooterView: View {
         Button("Next Day", systemImage: "chevron.right") {
 
         }
-        .buttonStyle(ChevronButton(buttonType: .large))
+        .buttonStyle(ChevronButton(buttonType: .large, buttonDir: .trailing))
         
         
       }

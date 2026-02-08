@@ -16,7 +16,13 @@ struct ChevronButton: ButtonStyle {
     case large
   }
 
+  enum ButtonDir {
+    case leading
+    case trailing
+  }
+
   let buttonType: ButtonType
+  let buttonDir: ButtonDir
 
   var buttonColor: Color {
     switch buttonType {
@@ -34,11 +40,21 @@ struct ChevronButton: ButtonStyle {
       Color(.secondaryLabel)
     }
   }
+  var smallButtonPaddingDir: Edge.Set {
+    switch buttonDir {
+    case .leading:
+      .trailing
+    case .trailing:
+      .leading
+    }
+  }
 
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
       .labelStyle(.iconOnly)
       .font(.system(size: buttonType == .small ? 13 : 24))
+      // Increasing small button touch target
+      .padding(smallButtonPaddingDir, buttonType == .small ? 12 : 0)
       .fontWeight(.bold)
       .foregroundStyle(
         configuration.isPressed ? pressedButtonColor : buttonColor

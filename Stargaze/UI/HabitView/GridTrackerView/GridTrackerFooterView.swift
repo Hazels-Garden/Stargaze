@@ -17,14 +17,18 @@ struct GridTrackerFooterView: View {
     HStack {
       HStack {
         Button("Previous Year", systemImage: "chevron.left") {
-
+          
         }
-        .buttonStyle(ChevronButton(buttonType: .small))
+        .buttonStyle(ChevronButton(buttonType: .small, buttonDir: .leading))
+        .border(showBorder ? .green : .clear)
+        
         Text("2026").SGMono().foregroundStyle(.secondary)
+        
         Button("Next Year", systemImage: "chevron.right") {
-
+          
         }
-        .buttonStyle(ChevronButton(buttonType: .small))
+        .buttonStyle(ChevronButton(buttonType: .small, buttonDir: .trailing))
+        .border(showBorder ? .green : .clear)
       }
       Spacer()
       Text("320 days left").SGMono().foregroundStyle(.secondary)
