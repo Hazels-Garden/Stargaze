@@ -12,29 +12,37 @@ import SwiftUI
 struct GridEmptySpace: View {
 
   let showBorder: Bool
-  let canvasHeight: CGFloat = 420
-  let horizontalPadding: CGFloat = 0
-  let canvasPadding: CGFloat
+  let canvasHeight: CGFloat
+  let horizontalPadding: CGFloat
+  let verticalPadding: CGFloat
 
   var body: some View {
     ZStack {
       Rectangle()
         .foregroundStyle(.clear)
-        .border(showBorder ? Color(.tertiaryLabel) : .clear)
+        .border(showBorder ? Color(.yellow) : .clear)
       Rectangle()
         .foregroundStyle(.clear)
-        .border(showBorder ? Color(.tertiaryLabel) : .clear)
+        .border(showBorder ? Color(.yellow) : .clear)
         .frame(
           maxWidth: .infinity,
           minHeight: canvasHeight,
           maxHeight: canvasHeight,
         )
-        .padding(.horizontal, horizontalPadding)
-        .padding(.bottom, canvasPadding)
+        .padding(horizontal: horizontalPadding, vertical: verticalPadding)
     }
+    .frame(
+      maxWidth: .infinity,
+      maxHeight: canvasHeight + (2 * verticalPadding)
+    )
   }
 }
 
 #Preview {
-  GridEmptySpace(showBorder: true, canvasPadding: 16)
+  GridEmptySpace(
+    showBorder: false,
+    canvasHeight: 420,
+    horizontalPadding: 24,
+    verticalPadding: 16
+  )
 }
