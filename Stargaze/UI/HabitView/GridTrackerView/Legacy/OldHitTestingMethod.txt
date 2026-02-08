@@ -1,0 +1,9 @@
+for pointsData in viewModel.starPointsData {
+  let distance =
+    pow((pointsData.cgPoint.x - value.location.x), 2)
+    + pow((pointsData.cgPoint.y - value.location.y), 2)
+
+  if closestStarPoint.dist > distance {
+    closestStarPoint = (distance, pointsData.intPoint)
+  }
+}
