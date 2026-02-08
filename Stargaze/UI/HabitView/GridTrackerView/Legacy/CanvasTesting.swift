@@ -1,5 +1,5 @@
 //
-//  CanvasGridTrackerView.swift
+//  CanvasTesting.swift
 //  Stargaze
 //
 //  Created by Hazel Nishad on 23/1/26.
@@ -9,7 +9,7 @@
 
 import SwiftUI
 
-struct CanvasGridTrackerView: View {
+struct CanvasTesting: View {
 
   let showBorder: Bool
   let nRows = 21
@@ -25,16 +25,16 @@ struct CanvasGridTrackerView: View {
       context,
       size in
       var star = context.resolve(Image("Star"))
-      star.shading = .color(Color(.tertiaryLabel))
+      star.shading = .color(Color(.white))
       for i in 0..<nRows {
         for j in 0..<nCols {
-          
+
           let starCtx = context
-          
-          if i * nCols + j >= 365 {
-            return
-          }
-          
+
+//          if i * nCols + j >= 365 {
+//            return
+//          }
+
           let frame = CGRect(
             origin: CGPoint(
               x: Double(j) * ((size.width - starSize) / Double(nCols - 1)),
@@ -45,8 +45,38 @@ struct CanvasGridTrackerView: View {
               height: starSize
             )
           )
+          let horiLine = CGRect(
+            origin: CGPoint(
+              x: 0,
+              y: Double(i) * ((size.height - 1) / Double(nRows - 1))
+            ),
+            size: CGSize(
+              width: size.width,
+              height: 1
+            )
+          )
+          let vertLine = CGRect(
+            origin: CGPoint(
+              x: Double(j) * ((size.width - 1) / Double(nCols - 1)),
+              y: 0
+            ),
+            size: CGSize(
+              width: 1,
+              height: size.height
+            )
+          )
           starCtx.draw(star, in: frame)
-          
+          starCtx
+            .stroke(
+              Rectangle().path(in: horiLine),
+              with: .color(Color(.quaternarySystemFill))
+            )
+          starCtx
+            .stroke(
+              Rectangle().path(in: vertLine),
+              with: .color(Color(.quaternarySystemFill))
+            )
+
         }
       }
     }
@@ -60,5 +90,5 @@ struct CanvasGridTrackerView: View {
 }
 
 #Preview {
-  CanvasGridTrackerView(showBorder: true)
+  CanvasTesting(showBorder: true)
 }
