@@ -7,8 +7,11 @@
 // 💖✨
 //
 
+// This struct was a mistake sigh :(
+
 import Foundation
 
+nonisolated
 struct Point: Hashable {
   let r: Int
   let c: Int
