@@ -45,4 +45,5 @@ struct GridEmptySpace: View {
     horizontalPadding: 24,
     verticalPadding: 16
   )
+  .environment(AppState.shared)
 }

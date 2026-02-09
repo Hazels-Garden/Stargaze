@@ -33,4 +33,5 @@ struct HabitTabView: View {
 #Preview {
   HabitTabView(selection: 0)
     .modelContainer(SampleData.shared.modelContainer)
+    .environment(AppState.shared)
 }

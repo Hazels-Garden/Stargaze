@@ -25,4 +25,5 @@ struct ToggleTextView: View {
 
 #Preview {
   ToggleTextView(text: "Friday, 21/01")
+    .environment(AppState.shared)
 }
