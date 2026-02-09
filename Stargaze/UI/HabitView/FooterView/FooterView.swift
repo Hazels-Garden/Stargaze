@@ -14,6 +14,8 @@ struct FooterView: View {
   @State private var isOn = false
   let color: [String: Double]
   let showBorder: Bool
+  @Environment(AppState.self) private var appState
+  @State var daysRemaining: Int = 365
 
   var body: some View {
     VStack(spacing: 10) {
@@ -21,20 +23,21 @@ struct FooterView: View {
         
         
         Button("Previous Day", systemImage: "chevron.left") {
-
+          appState.selectedDate.toPreviousDay()
         }
         .buttonStyle(ChevronButton(buttonType: .large, buttonDir: .leading))
 
         
         Toggle(isOn: $isOn) {
-          ToggleTextView(text: "Saturday, 21/01")
+          ToggleTextView(text: appState.formattedDateFromSelectedDate())
+            .animation(.smooth(duration: 0.25), value: appState.selectedDate)
         }
         .toggleStyle(ActionToggle(color: color))
         .border(showBorder ? .purple : .clear)
         
         
         Button("Next Day", systemImage: "chevron.right") {
-
+          appState.selectedDate.toNextDay()
         }
         .buttonStyle(ChevronButton(buttonType: .large, buttonDir: .trailing))
         
@@ -56,4 +59,5 @@ struct FooterView: View {
 
 #Preview {
   FooterView(color: ["hue": 0.6167, "sat": 0.91, "bri": 0.82, "opa": 1], showBorder: false)
+    .environment(AppState.shared)
 }
