@@ -10,8 +10,8 @@
 import SwiftUI
 
 struct GridTrackerView: View {
-  @State private var isShowingPopover = false
   @State var viewModel: GridTrackerViewModel
+  @Environment(AppState.self) private var appState
 
   let showBorder: Bool
 
@@ -54,7 +54,6 @@ struct GridTrackerView: View {
               }
               .onEnded { value in
                 viewModel.tappedStarPoint = nil
-                isShowingPopover = true
               }
           )
         }
@@ -198,4 +197,5 @@ struct GridTrackerView: View {
     ),
     showBorder: true
   )
+  .environment(AppState.shared)
 }

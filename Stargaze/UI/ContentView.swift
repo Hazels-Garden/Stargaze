@@ -15,12 +15,14 @@ import SwiftUI
 struct ContentView: View {
 
   @Environment(\.modelContext) var modelContext
+  var appState = AppState.shared
 
   var body: some View {
     ZStack {
       HabitTabView(selection: 0)
     }
     .ignoresSafeArea()
+    .environment(appState)
   }
 }
 

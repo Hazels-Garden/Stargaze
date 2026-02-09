@@ -72,4 +72,5 @@ struct HabitView: View {
   HabitView(
     habit: Habit(color: ["hue": 0.8722, "sat": 0.81, "bri": 0.65, "opa": 1])
   )
+  .environment(AppState.shared)
 }
