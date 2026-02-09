@@ -57,9 +57,22 @@ extension Color {
 // Posted by Adam Smaka
 // Retrieved 2026-02-07, License - CC BY-SA 3.0
 // Date+DayOfYear
-extension Date {
+nonisolated
+  extension Date
+{
   var dayOfYear: Int {
     return Calendar.current.ordinality(of: .day, in: .year, for: self)!
+  }
+  
+  // The below are written by me (Hazel)
+  // Date+ToPreviousDay
+  mutating func toPreviousDay() {
+    self = Calendar.current.date(byAdding: .day, value: -1, to: self)!
+  }
+    
+  // Date+ToNextDay
+  mutating func toNextDay() {
+    self = Calendar.current.date(byAdding: .day, value: 1, to: self)!
   }
 }
 
@@ -72,8 +85,6 @@ extension Comparable {
     return min(max(self, limits.lowerBound), limits.upperBound)
   }
 }
-
-
 
 // Text+Styles
 extension Text {
@@ -90,7 +101,7 @@ extension Text {
       .fontWeight(.semibold)
       .multilineTextAlignment(.center)
   }
-  
+
   func SGLarge() -> some View {
     self
       .font(.system(size: 15))
