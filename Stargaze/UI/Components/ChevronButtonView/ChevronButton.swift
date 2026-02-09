@@ -27,7 +27,7 @@ struct ChevronButton: ButtonStyle {
   var buttonColor: Color {
     switch buttonType {
     case .small:
-      Color(.secondaryLabel)
+      Color(.tertiaryLabel)
     case .large:
       Color(.quaternaryLabel)
     }
