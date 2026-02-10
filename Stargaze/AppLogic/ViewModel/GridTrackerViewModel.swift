@@ -12,19 +12,22 @@ import SwiftUI
 
 @Observable
 final class GridTrackerViewModel {
+  var appState = AppState.shared
   var hasDataBeenSet: Bool
   var starPointsData:
     [(cgPoint: CGPoint, intPoint: Point, angle: Double, isChecked: Bool)]
   var starCGPosMap: [Point: CGPoint]
   var tappedStarPoint: Point?
 
-  var color: [String: Double]
-  var checkedDays: [CheckedDays]
+  var habit: Habit
   var checkedDaysSet: Set<Int>
+  var checkedDaysSetByYear: [Int: Set<Int>]
 
   let horizontalPadding: CGFloat
   let verticalPadding: CGFloat
   let canvasHeight: CGFloat
+  
+  let starAngles = (0...366).map {_ in Double.random(in: 0...90)}
 
   let nRows = 21
   let nCols = 18
@@ -49,9 +52,9 @@ final class GridTrackerViewModel {
     )] = [],
     starCGPosMap: [Point: CGPoint] = [:],
     tappedStarPoint: Point? = nil,
-    color: [String: Double],
-    checkedDays: [CheckedDays],
+    habit: Habit = Habit(),
     checkedDaysSet: Set<Int> = Set(),
+    checkedDaysSetByYear: [Int: Set<Int>] = [:],
     horizontalPadding: CGFloat = 24,
     verticalPadding: CGFloat = 16,
     canvasHeight: CGFloat = 420,
@@ -61,41 +64,62 @@ final class GridTrackerViewModel {
     self.starPointsData = starPointsData
     self.starCGPosMap = starCGPosMap
     self.tappedStarPoint = tappedStarPoint
-    self.color = color
-    self.checkedDays = checkedDays
+    self.habit = habit
     self.checkedDaysSet = checkedDaysSet
+    self.checkedDaysSetByYear = checkedDaysSetByYear
     self.horizontalPadding = horizontalPadding
     self.verticalPadding = verticalPadding
     self.canvasHeight = canvasHeight
     self.stride = stride
   }
 
+  func initializeCanvas() {
+    self.hasDataBeenSet = true
+    self.getCheckedDaysSetByYear()
+  }
+
   func initializeStars(size: CGSize) {
+    self.starPointsData.removeAll()
     self.stride = self.calculateStarGridPoint(size: size, row: 1, col: 1)
 
     for i in 0..<nRows {
       for j in 0..<nCols {
-        let currentStarNum = i * nCols + (j + 1)
-        guard currentStarNum <= 365 else { return }
-        let isChecked = self.checkedDaysSet.contains(
-          Int(currentStarNum)
-        )
+        let currentStarNum = getStarNum(from: Point(r: i, c: j))
+        guard
+          currentStarNum
+            <= appState.calculateDaysInSelectedYear()
+        else { return }
+        
         let starPos = self.calculateStarGridPoint(size: size, row: i, col: j)
         self.saveStarPointsData(
           for: starPos,
           row: i,
           col: j,
-          isChecked: isChecked
+          isChecked: isCheckedDayChecked(for: currentStarNum)
         )
       }
     }
   }
 
-  func getCheckedDaysSet() {
-    for checkedDay in self.checkedDays {
+  func getCheckedDaysSetByYear() {
+    for checkedDay in self.habit.checkedDays {
+      let yearComponent = Calendar.current.dateComponents([.year], from: checkedDay.date)
       let dayOfYear = checkedDay.date.dayOfYear
-      self.checkedDaysSet.insert(dayOfYear)
+      if self.checkedDaysSetByYear[yearComponent.year!] == nil {
+        self.checkedDaysSetByYear[yearComponent.year!] = Set()
+      }
+      self.checkedDaysSetByYear[yearComponent.year!]?.insert(dayOfYear)
     }
+  }
+  
+  func isCheckedDayChecked(for starNum: Int) -> Bool {
+    var isChecked = false
+    if let checkedDaysSetForSelectedYear = self.checkedDaysSetByYear[appState.selectedYear] {
+      isChecked = checkedDaysSetForSelectedYear.contains(
+        Int(starNum)
+      )
+    }
+    return isChecked
   }
 
   func saveStarPointsData(
@@ -114,7 +138,7 @@ final class GridTrackerViewModel {
       (
         cgPoint: starCGPoint,
         intPoint: starPoint,
-        angle: Double.random(in: 0...90),
+        angle: self.starAngles[self.getStarNum(from: starPoint) - 1],
         isChecked: isChecked
       )
     )
@@ -136,6 +160,10 @@ final class GridTrackerViewModel {
         canvasOrigin.y
         + (Double(row) * ((canvasHeight - starSize) / Double(nRows - 1)))
     )
+  }
+
+  func getStarNum(from point: Point) -> Int {
+    return (point.r * nCols + (point.c + 1))
   }
 
   func handleDragGesture(value: DragGesture.Value) -> (
@@ -179,6 +207,38 @@ final class GridTrackerViewModel {
       pow((starCGPoint.x - value.location.x), 2)
       + pow((starCGPoint.y - value.location.y), 2)
 
+    // Set selected date to tapped point (clamped to numDaysInYear)
+    let daysInSelectedYear = appState.calculateDaysInSelectedYear()
+    let tappedStarInt = getStarNum(from: closestStarPoint.point)
+      .clamped(
+        to: 1...daysInSelectedYear
+      )
+    if tappedStarInt == appState.currentDate.dayOfYear {
+      // Footer reset view needs selected date to be eq. to current date to work
+      appState.selectedDate = appState.currentDate
+    } else {
+      if let newSelectedDate = appState.calculateDateFromSelectedDayOfYear(
+        dayOfYear: tappedStarInt
+      ) {
+        appState.selectedDate = newSelectedDate
+      }
+    }
+
     return closestStarPoint
+  }
+
+  func handleDragGestureEnd(value: DragGesture.Value? = nil) {
+    if let dragEndValue = value {
+      let closestStarPoint = self.handleDragGesture(value: dragEndValue)
+      guard
+        self.getStarNum(from: closestStarPoint.point)
+          == appState.currentDate.dayOfYear
+      else { return }
+    }
+    self.resetTappedStarPoint()
+  }
+
+  @objc func resetTappedStarPoint() {
+    self.tappedStarPoint = nil
   }
 }
