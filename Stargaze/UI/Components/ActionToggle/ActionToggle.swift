@@ -53,6 +53,7 @@ struct ActionToggle: ToggleStyle {
         .clipShape(
           RoundedRectangle(cornerRadius: 20, style: .continuous)
         )
+        .animation(.smooth, value: configuration.isOn)
 
     }
     .buttonStyle(.plain)
