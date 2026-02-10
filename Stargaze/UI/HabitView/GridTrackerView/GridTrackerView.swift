@@ -49,7 +49,7 @@ struct GridTrackerView: View {
           }
           .onChange(of: viewModel.habit.checkedDays) {
             viewModel.initializeCanvas()
-            viewModel.initializeStars(size: size)
+            viewModel.reinitializeStars(size: size)
           }
           .border(showBorder ? Color(.tertiaryLabel) : .clear)
           .gesture(
