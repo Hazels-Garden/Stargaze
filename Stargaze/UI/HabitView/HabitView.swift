@@ -43,10 +43,10 @@ struct HabitView: View {
             horizontalPadding: canvasHorizontalPadding,
             verticalPadding: canvasVerticalPadding,
           )
+          .padding(.bottom, canvasVerticalPadding / 2)
           GridTrackerView(
             viewModel: GridTrackerViewModel(
-              color: habit.color,
-              checkedDays: habit.checkedDays,
+              habit: habit,
               horizontalPadding: canvasHorizontalPadding,
               verticalPadding: canvasVerticalPadding,
               canvasHeight: canvasHeight,
@@ -54,13 +54,15 @@ struct HabitView: View {
             showBorder: showBorder,
           )
         }
-        .padding(.bottom, canvasVerticalPadding / 2)
 
         GridTrackerFooterView(showBorder: showBorder)
           .padding(.horizontal, chromeHorizontalPadding)
 
-        FooterView(color: habit.color, showBorder: showBorder)
-          .padding(.horizontal, chromeHorizontalPadding)
+        FooterView(
+          habit: habit,
+          showBorder: showBorder
+        )
+        .padding(.horizontal, chromeHorizontalPadding)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
