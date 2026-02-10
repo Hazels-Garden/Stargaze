@@ -13,43 +13,38 @@ import SwiftUI
 @MainActor
 @Observable
 final class AppState {
-  
+
   static let shared = AppState(
     currentYear: Calendar.current.component(.year, from: .now),
     selectedYear: Calendar.current.component(.year, from: .now),
-    currentDayOfYear: Date.now.dayOfYear,
+    currentDate: Date.now,
     selectedDate: Date.now,
-    daysInSelectedYear: 365
   )
-  
-  var currentYear: Int
+
+  let currentYear: Int
   var selectedYear: Int
-  var currentDayOfYear: Int
+  let currentDate: Date
   var selectedDate: Date
-  var daysInSelectedYear: Int
-  
-  
+
   private init(
     currentYear: Int,
     selectedYear: Int,
-    currentDayOfYear: Int,
+    currentDate: Date,
     selectedDate: Date,
-    daysInSelectedYear: Int
   ) {
     self.currentYear = currentYear
     self.selectedYear = selectedYear
-    self.currentDayOfYear = currentDayOfYear
+    self.currentDate = currentDate
     self.selectedDate = selectedDate
-    self.daysInSelectedYear = daysInSelectedYear
   }
-    
-  func calculateDaysInSelectedYear() {
+
+  func calculateDaysInSelectedYear() -> Int {
     let dateComponents = DateComponents(year: self.selectedYear)
     let date = Calendar.current.date(from: dateComponents)!
     let range = Calendar.current.range(of: .day, in: .year, for: date)!
-    self.daysInSelectedYear = range.count
+    return range.count
   }
-  
+
   func formattedDateFromSelectedDate() -> String {
     let dateFormatter = DateFormatter()
     let userLocaleDateFormat = DateFormatter.dateFormat(
@@ -61,12 +56,20 @@ final class AppState {
     let dateString = dateFormatter.string(from: self.selectedDate)
     return dateString
   }
-  
+
   func calculateDateFromSelectedDayOfYear(dayOfYear: Int) -> Date? {
     var dateComponents = DateComponents()
     dateComponents.year = self.selectedYear
     dateComponents.day = dayOfYear
     return Calendar.current.date(from: dateComponents)
   }
-  
+
+  func getDateOnly(from date: Date) -> DateComponents {
+    let calender = Calendar.current
+    return calender.dateComponents(
+      [.year, .month, .day],
+      from: date
+    )
+  }
+
 }
