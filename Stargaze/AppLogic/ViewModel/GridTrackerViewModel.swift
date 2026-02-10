@@ -26,8 +26,9 @@ final class GridTrackerViewModel {
   let horizontalPadding: CGFloat
   let verticalPadding: CGFloat
   let canvasHeight: CGFloat
-  
-  let starAngles = (0...366).map {_ in Double.random(in: 0...90)}
+
+  let starAngles = (0...366).map { _ in Double.random(in: 0...90) }
+  var starGridPoints: [(x: Double, y: Double)] = []
 
   let nRows = 21
   let nCols = 18
@@ -89,8 +90,30 @@ final class GridTrackerViewModel {
           currentStarNum
             <= appState.calculateDaysInSelectedYear()
         else { return }
-        
+
         let starPos = self.calculateStarGridPoint(size: size, row: i, col: j)
+        starGridPoints.append(starPos)
+        self.saveStarPointsData(
+          for: starPos,
+          row: i,
+          col: j,
+          isChecked: isCheckedDayChecked(for: currentStarNum)
+        )
+      }
+    }
+  }
+
+  // Reuse data
+  func reinitializeStars(size: CGSize) {
+    self.starPointsData.removeAll()
+    for i in 0..<nRows {
+      for j in 0..<nCols {
+        let currentStarNum = getStarNum(from: Point(r: i, c: j))
+        guard
+          currentStarNum
+            <= appState.calculateDaysInSelectedYear()
+        else { return }
+        let starPos = starGridPoints[currentStarNum - 1]
         self.saveStarPointsData(
           for: starPos,
           row: i,
@@ -102,8 +125,12 @@ final class GridTrackerViewModel {
   }
 
   func getCheckedDaysSetByYear() {
+    self.checkedDaysSetByYear = [:]
     for checkedDay in self.habit.checkedDays {
-      let yearComponent = Calendar.current.dateComponents([.year], from: checkedDay.date)
+      let yearComponent = Calendar.current.dateComponents(
+        [.year],
+        from: checkedDay.date
+      )
       let dayOfYear = checkedDay.date.dayOfYear
       if self.checkedDaysSetByYear[yearComponent.year!] == nil {
         self.checkedDaysSetByYear[yearComponent.year!] = Set()
@@ -111,13 +138,13 @@ final class GridTrackerViewModel {
       self.checkedDaysSetByYear[yearComponent.year!]?.insert(dayOfYear)
     }
   }
-  
+
   func isCheckedDayChecked(for starNum: Int) -> Bool {
     var isChecked = false
-    if let checkedDaysSetForSelectedYear = self.checkedDaysSetByYear[appState.selectedYear] {
-      isChecked = checkedDaysSetForSelectedYear.contains(
-        Int(starNum)
-      )
+    if let checkedDaysSetForSelectedYear = self.checkedDaysSetByYear[
+      appState.selectedYear
+    ] {
+      isChecked = checkedDaysSetForSelectedYear.contains(starNum)
     }
     return isChecked
   }
