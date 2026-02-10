@@ -23,13 +23,19 @@ struct ChevronButton: ButtonStyle {
 
   let buttonType: ButtonType
   let buttonDir: ButtonDir
+  let isDisabled: Bool
 
   var buttonColor: Color {
-    switch buttonType {
-    case .small:
-      Color(.tertiaryLabel)
-    case .large:
-      Color(.quaternaryLabel)
+    switch isDisabled {
+    case true:
+      Color(.quaternarySystemFill)
+    case false:
+      switch buttonType {
+      case .small:
+        Color(.tertiaryLabel)
+      case .large:
+        Color(.quaternaryLabel)
+      }
     }
   }
   var pressedButtonColor: Color {
