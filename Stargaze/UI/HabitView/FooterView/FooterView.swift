@@ -12,7 +12,6 @@ import SwiftUI
 
 struct FooterView: View {
 
-  @State private var isOn = false
   let habit: Habit
   let showBorder: Bool
   @Environment(\.modelContext) var modelContext
@@ -34,6 +33,39 @@ struct FooterView: View {
   }
 
   var body: some View {
+
+    let isChecked = Binding(
+      get: {
+        for checkedDay in habit.checkedDays {
+          if appState.getDateOnly(from: checkedDay.date)
+            == appState.getDateOnly(
+              from: appState.selectedDate
+            )
+          {
+            return true
+          }
+        }
+        return false
+      },
+      set: { (newValue: Bool) in
+        if newValue {
+          habit.checkedDays.append(CheckedDays(date: appState.selectedDate))
+        } else {
+          for (index, checkedDay) in habit.checkedDays.enumerated() {
+            if appState.getDateOnly(from: checkedDay.date)
+              == appState.getDateOnly(
+                from: appState.selectedDate
+              )
+            {
+              let removedCheckedDay = habit.checkedDays.remove(at: index)
+              modelContext.delete(removedCheckedDay)
+              try? modelContext.save()
+            }
+          }
+        }
+      }
+    )
+
     VStack(spacing: 10) {
       HStack {
 
@@ -49,14 +81,11 @@ struct FooterView: View {
         )
         .disabled(disablePreviousChevron)
 
-        Toggle(isOn: $isOn) {
+        Toggle(isOn: isChecked) {
           ToggleTextView(text: appState.formattedDateFromSelectedDate())
             .animation(.smooth(duration: 0.25), value: appState.selectedDate)
         }
         .toggleStyle(ActionToggle(color: habit.color))
-        .onChange(of: isOn) { oldValue, newValue in
-          toggleSelectedDayToChecked(oldValue: oldValue)
-        }
         .border(showBorder ? .purple : .clear)
         .disabled(disableActionToggle)
 
@@ -98,10 +127,13 @@ struct FooterView: View {
     .border(showBorder ? .purple : .clear)
     .onAppear {
       createCheckedDaysSet()
+      resetDateButtonIsVisible = (appState.selectedDate != appState.currentDate)
     }
     .onChange(of: appState.selectedDate) {
       resetDateButtonIsVisible = (appState.selectedDate != appState.currentDate)
-      selectedDayIsChecked()
+    }
+    .onChange(of: habit.checkedDays) {
+      createCheckedDaysSet()
     }
   }
 
@@ -109,34 +141,6 @@ struct FooterView: View {
     for checkedDay in habit.checkedDays {
       let checkedDate = appState.getDateOnly(from: checkedDay.date)
       checkedDaysSet.insert(checkedDate)
-    }
-  }
-
-  func selectedDayIsChecked() {
-    let selectedDate = appState.getDateOnly(from: appState.selectedDate)
-    let selectedDayIsChecked = checkedDaysSet.contains(selectedDate)
-    isOn = selectedDayIsChecked
-  }
-
-  func toggleSelectedDayToChecked(oldValue toggleState: Bool) {
-    if toggleState {
-      if let index = habit.checkedDays.firstIndex(
-        where: {
-          appState.getDateOnly(from: $0.date)
-            == appState.getDateOnly(
-              from: appState.selectedDate
-            )
-        })
-      {
-//        habit.checkedDays.remove(at: index)
-//        modelContext.delete(habit.checkedDays[index])
-      }
-
-    } else {
-      habit.checkedDays.append(CheckedDays(date: appState.selectedDate))
-      for checkedDay in habit.checkedDays {
-        print(checkedDay.date)
-      }
     }
   }
 
