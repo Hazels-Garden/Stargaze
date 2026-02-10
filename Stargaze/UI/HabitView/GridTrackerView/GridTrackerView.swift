@@ -18,17 +18,17 @@ struct GridTrackerView: View {
   var body: some View {
     ZStack {
       GeometryReader { geom in
+        let size = geom.size
         TimelineView(.animation) { timeline in
           Canvas {
             context,
             size in
-
             // TODO: Make random stars "shine" periodically
             //          let now = timeline.date.timeIntervalSinceReferenceDate
             //          let angle = now.remainder(dividingBy: 3) * 120
 
             for pointsData in viewModel.starPointsData {
-              drawStarGrid(
+              drawCanvas(
                 context: context,
                 size: size,
                 starPoint: pointsData,
@@ -38,13 +38,18 @@ struct GridTrackerView: View {
           }
           .onAppear {
             guard !viewModel.hasDataBeenSet else { return }
-            let size = geom.size
-            initializeCanvas()
-            initalizeStars(size: size)
+            viewModel.initializeCanvas()
+            viewModel.initializeStars(size: size)
           }
           .onChange(of: geom.size) {
-            let size = geom.size
-            initalizeStars(size: size)
+            viewModel.initializeStars(size: size)
+          }
+          .onChange(of: appState.selectedYear) {
+            viewModel.initializeStars(size: size)
+          }
+          .onChange(of: viewModel.habit.checkedDays) {
+            viewModel.initializeCanvas()
+            viewModel.initializeStars(size: size)
           }
           .border(showBorder ? Color(.tertiaryLabel) : .clear)
           .gesture(
@@ -53,12 +58,13 @@ struct GridTrackerView: View {
                 handleDragGesture(value: value)
               }
               .onEnded { value in
-                viewModel.tappedStarPoint = nil
+                viewModel.handleDragGestureEnd(value: value)
               }
           )
         }
       }
 
+      // Debug border rectangle
       Rectangle()
         .foregroundStyle(.clear)
         .border(showBorder ? Color(.tertiaryLabel) : .clear)
@@ -75,27 +81,16 @@ struct GridTrackerView: View {
     )
   }
 
-  // *************** Struct Functions Below ******************
+  // *************** Struct Methods Below ******************
 
-  func initializeCanvas() {
-    viewModel.hasDataBeenSet = true
-    viewModel.getCheckedDaysSet()
-  }
-
-  func initalizeStars(size: CGSize) {
-    viewModel.initializeStars(size: size)
-  }
-
-  func handleDragGesture(
-    value: DragGesture.Value,
-  ) {
+  func handleDragGesture(value: DragGesture.Value) {
     let closestStarPoint = viewModel.handleDragGesture(value: value)
 
     if closestStarPoint.point != viewModel.tappedStarPoint {
 
       // You have to be close to a star to interact
       // Squared because the euclidean dist isn't sqrt'd
-      let interactRadius = 16.0
+      let interactRadius = 12.0
       guard closestStarPoint.dist < pow(interactRadius, 2) else {
         return
       }
@@ -136,66 +131,150 @@ struct GridTrackerView: View {
     )
   }
 
-  // ************ The DRAW function is here! ****************
+  func drawDateIndictator(
+    for date: Date,
+    color: Color,
+    context: GraphicsContext,
+    size: CGSize,
+    using starPoint: (
+      cgPoint: CGPoint, intPoint: Point, angle: Double, isChecked: Bool
+    ),
+  ) {
+    let indicatorContext = context
 
-  func drawStarGrid(
+    // Move the currentDate pointer to 1 if selYear != curYear
+    // I set the selDate itself to 1 for that condition so this is not req
+    if date == appState.currentDate
+      && appState.selectedYear != appState.currentYear
+    {
+      guard
+        viewModel.getStarNum(from: starPoint.intPoint) == 1
+      else { return }
+    } else {
+      guard
+        viewModel.getStarNum(from: starPoint.intPoint) == date.dayOfYear
+      else { return }
+    }
+    indicatorContext
+      .stroke(
+        RoundedRectangle(cornerRadius: 4)
+          .path(
+            in: CGRect(
+              x: -(viewModel.starSize / 2),
+              y: -(viewModel.starSize / 2),
+              width: 16,
+              height: 16
+            )
+          ),
+        with: .color(color),
+        lineWidth: 2
+      )
+  }
+
+  // ************ The main DRAW function is here! ****************
+
+  func drawCanvas(
     context: GraphicsContext,
     size: CGSize,
     starPoint: (
       cgPoint: CGPoint, intPoint: Point, angle: Double, isChecked: Bool
     ),
   ) {
+    var starContext = context
 
     var star = context.resolve(Image("Star"))
-    star.shading =
-      starPoint.isChecked
-      ? .color(
-        ColorMananger.toColorPrimary(color: viewModel.color)
+    star.shading = .color(
+      Color(.quaternaryLabel).mix(
+        with: ColorMananger.toColorPrimary(color: viewModel.habit.color),
+        by: 0.1
       )
-      : .color(
-        Color(.quaternaryLabel).mix(
-          with: ColorMananger.toColorPrimary(color: viewModel.color),
-          by: 0.1
-        )
-      )
+    )
 
-    if let tappedStarPoint = viewModel.tappedStarPoint {
-      if Point(r: starPoint.intPoint.r, c: starPoint.intPoint.c)
-        == tappedStarPoint
-      {
-        star.shading = .color(
-          ColorMananger.toColorSecondary(color: viewModel.color)
-        )
-      }
+    // Old method: highlighted when star is tapped
+    //    if let tappedStarPoint = viewModel.tappedStarPoint {
+    //      if Point(r: starPoint.intPoint.r, c: starPoint.intPoint.c)
+    //        == tappedStarPoint
+    //      {
+    //        star.shading = .color(
+    //          ColorMananger.toColorSecondary(color: viewModel.habit.color)
+    //        )
+    //      }
+    //    }
+
+    let currentStarNum = viewModel.getStarNum(from: starPoint.intPoint)
+
+    if currentStarNum == appState.selectedDate.dayOfYear
+      && currentStarNum != appState.currentDate.dayOfYear
+    {
+      star.shading = .color(
+        ColorMananger.toColorSecondary(color: viewModel.habit.color, opacity: 0.8)
+      )
     }
 
-    var starContext = context
-    moveCanvasToStar(context: &starContext, for: starPoint)
-    rotateStarByAngle(context: &starContext, for: starPoint)
-    starContext.draw(star, in: viewModel.frame)
+    if starPoint.isChecked {
+      star.shading =
+        .color(
+          ColorMananger.toColorPrimary(color: viewModel.habit.color)
+        )
+    }
 
-    //    starContext.stroke(Rectangle().path(in: frame), with: .foreground)
+    moveCanvasToStar(context: &starContext, for: starPoint)
+
+    drawDateIndictator(
+      for: appState.currentDate,
+      color: ColorMananger.toColorSecondary(
+        color: viewModel.habit.color,
+        opacity: 0.75
+      ),
+      context: starContext,
+      size: size,
+      using: starPoint
+    )
+    drawDateIndictator(
+      for: appState.selectedDate,
+      color: ColorMananger.toColorPrimary(
+        color: viewModel.habit.color,
+      ),
+      context: starContext,
+      size: size,
+      using: starPoint
+    )
+
+    // Irreversible rotation by below function!
+    rotateStarByAngle(context: &starContext, for: starPoint)
+
+    starContext.draw(star, in: viewModel.frame)
   }
 }
 
 #Preview {
   GridTrackerView(
     viewModel: GridTrackerViewModel(
-      color: ["hue": 1, "sat": 0, "bri": 1, "opa": 1],
-      checkedDays: [
-        CheckedDays(date: Date(timeIntervalSince1970: 1_736_208_000)),
-        CheckedDays(date: Date(timeIntervalSince1970: 1_736_640_000)),
-        CheckedDays(date: Date(timeIntervalSince1970: 1_736_899_200)),
-        CheckedDays(date: Date(timeIntervalSince1970: 1_737_244_800)),
-        CheckedDays(date: Date(timeIntervalSince1970: 1_737_417_600)),
-        CheckedDays(date: Date(timeIntervalSince1970: 1_737_676_800)),
-        CheckedDays(date: Date(timeIntervalSince1970: 1_737_936_000)),
-      ],
+      habit: Habit(
+        color: ["hue": 0.6167, "sat": 0.91, "bri": 0.82, "opa": 1],
+        checkedDays: [
+          CheckedDays(date: Date(timeIntervalSince1970: 1_767_335_400)),  // 2026-01-02
+          CheckedDays(date: Date(timeIntervalSince1970: 1_767_421_800)),  // 2026-01-03
+          CheckedDays(date: Date(timeIntervalSince1970: 1_767_681_000)),  // 2026-01-06
+          CheckedDays(date: Date(timeIntervalSince1970: 1_767_853_800)),  // 2026-01-08
+          CheckedDays(date: Date(timeIntervalSince1970: 1_768_285_800)),  // 2026-01-13
+          CheckedDays(date: Date(timeIntervalSince1970: 1_768_804_200)),  // 2026-01-19
+          CheckedDays(date: Date(timeIntervalSince1970: 1_769_063_400)),  // 2026-01-22
+          CheckedDays(date: Date(timeIntervalSince1970: 1_769_149_800)),  // 2026-01-23
+          CheckedDays(date: Date(timeIntervalSince1970: 1_769_236_200)),  // 2026-01-24
+          CheckedDays(date: Date(timeIntervalSince1970: 1_769_322_600)),  // 2026-01-25
+          CheckedDays(date: Date(timeIntervalSince1970: 1_769_754_600)),  // 2026-01-30
+          CheckedDays(date: Date(timeIntervalSince1970: 1_770_186_600)),  // 2026-02-04
+          CheckedDays(date: Date(timeIntervalSince1970: 1_770_273_000)),  // 2026-02-05
+          CheckedDays(date: Date(timeIntervalSince1970: 1_770_359_400)),  // 2026-02-06
+          CheckedDays(date: Date(timeIntervalSince1970: 1_770_618_600)),  // 2026-02-09
+        ]
+      ),
       horizontalPadding: 24,
       verticalPadding: 16,
       canvasHeight: 420,
     ),
-    showBorder: true
+    showBorder: false
   )
   .environment(AppState.shared)
 }
