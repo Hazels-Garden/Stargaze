@@ -22,7 +22,7 @@ class SampleData {
   }
   
   private init() {
-    let schema = Schema(Habit.self)
+    let schema = Schema([Habit.self])
     let modelConfiguration = ModelConfiguration(
       schema: schema,
       isStoredInMemoryOnly: true
