@@ -181,7 +181,7 @@ struct GridTrackerView: View {
 
     var star = context.resolve(Image("Star"))
     star.shading = .color(
-      Color(.quaternaryLabel).mix(
+      Color(.quaternaryLabel).mixed(
         with: ColorMananger.toColorPrimary(color: viewModel.habit.color),
         by: 0.1
       )
