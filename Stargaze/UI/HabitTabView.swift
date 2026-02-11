@@ -14,9 +14,6 @@ struct HabitTabView: View {
   
   @Query(sort: \Habit.sortOrder) var habits: [Habit]
   @Environment(\.modelContext) var modelContext
-  // MARK: Apparently TabView in page mode has perf issues
-  // MARK: that is somewhat allieviated by a pointless sel binding
-  // MARK: We may need to go UIKit on this.
   
     var body: some View {
       return TabView() {

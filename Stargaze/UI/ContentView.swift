@@ -10,8 +10,6 @@
 import SwiftData
 import SwiftUI
 
-// TODO: add the only dark mode and portrait mode constraints
-
 struct ContentView: View {
 
   @Environment(\.modelContext) var modelContext
