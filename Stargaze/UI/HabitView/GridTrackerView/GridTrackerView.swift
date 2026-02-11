@@ -19,49 +19,46 @@ struct GridTrackerView: View {
     ZStack {
       GeometryReader { geom in
         let size = geom.size
-        TimelineView(.animation) { timeline in
-          Canvas {
-            context,
-            size in
-            // TODO: Make random stars "shine" periodically
-            let now = timeline.date.timeIntervalSinceReferenceDate
-            //          let angle = now.remainder(dividingBy: 3) * 120
+        Canvas {
+          context,
+          size in
+          // TODO: Make random stars "shine" periodically
+          //            let now = timeline.date.timeIntervalSinceReferenceDatex
+          //          let angle = now.remainder(dividingBy: 3) * 120
 
-            for pointsData in viewModel.starPointsData {
-              drawCanvas(
-                context: context,
-                size: size,
-                starPoint: pointsData,
-              )
-            }
-
+          for pointsData in viewModel.starPointsData {
+            drawCanvas(
+              context: context,
+              size: size,
+              starPoint: pointsData,
+            )
           }
-          .onAppear {
-            guard !viewModel.hasDataBeenSet else { return }
-            viewModel.initializeCanvas()
-            viewModel.initializeStars(size: size)
-          }
-          .onChange(of: geom.size) {
-            viewModel.initializeStars(size: size)
-          }
-          .onChange(of: appState.selectedYear) {
-            viewModel.initializeStars(size: size)
-          }
-          .onChange(of: viewModel.habit.checkedDays) {
-            viewModel.initializeCanvas()
-            viewModel.reinitializeStars(size: size)
-          }
-          .border(showBorder ? Color(.tertiaryLabel) : .clear)
-          .gesture(
-            DragGesture(minimumDistance: 0, coordinateSpace: .local)
-              .onChanged { value in
-                handleDragGesture(value: value)
-              }
-              .onEnded { value in
-                viewModel.handleDragGestureEnd(value: value)
-              }
-          )
         }
+        .onAppear {
+          guard !viewModel.hasDataBeenSet else { return }
+          viewModel.initializeCanvas()
+          viewModel.initializeStars(size: size)
+        }
+        .onChange(of: geom.size) {
+          viewModel.initializeStars(size: size)
+        }
+        .onChange(of: appState.selectedYear) {
+          viewModel.initializeStars(size: size)
+        }
+        .onChange(of: viewModel.habit.checkedDays) {
+          viewModel.initializeCanvas()
+          viewModel.reinitializeStars(size: size)
+        }
+        .border(showBorder ? Color(.tertiaryLabel) : .clear)
+        .gesture(
+          DragGesture(minimumDistance: 0, coordinateSpace: .local)
+            .onChanged { value in
+              handleDragGesture(value: value)
+            }
+            .onEnded { value in
+              viewModel.handleDragGestureEnd(value: value)
+            }
+        )
       }
 
       // Debug border rectangle
