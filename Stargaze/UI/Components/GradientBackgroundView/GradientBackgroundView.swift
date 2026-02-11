@@ -14,7 +14,7 @@ struct GradientBackgroundView: View {
   let showBorder: Bool
   let color: [String: Double]
   @State var startRadius: CGFloat = 0
-  @State var stopRadius: CGFloat = 10
+  @State var stopRadius: CGFloat = 40
 
   var body: some View {
     RadialGradient(
@@ -27,18 +27,19 @@ struct GradientBackgroundView: View {
       startRadius: startRadius,
       endRadius: stopRadius
     )
+    .drawingGroup()
     .edgesIgnoringSafeArea(.all)
     .border(showBorder ? .green : .clear)
     .onAppear {
-      withAnimation {
-        startRadius = 40
+      withAnimation(.spring(duration: 0.75)) {
+        startRadius = 0
         stopRadius = 360
       }
     }
     .onDisappear {
       withAnimation(.linear(duration: 0)) {
         startRadius = 0
-        stopRadius = 10
+        stopRadius = 40
       }
     }
   }
