@@ -14,7 +14,7 @@ import Foundation
 
 import UIKit
 
-class Haptics {
+final class Haptics {
   static let shared = Haptics()
   
   private init() { }

@@ -182,7 +182,7 @@ struct GridTrackerView: View {
     var star = context.resolve(Image("Star"))
     star.shading = .color(
       Color(.quaternaryLabel).mixed(
-        with: ColorMananger.toColorPrimary(color: viewModel.habit.color),
+        with: ColorManager.toColorPrimary(color: viewModel.habit.color),
         by: 0.1
       )
     )
@@ -204,7 +204,7 @@ struct GridTrackerView: View {
       && currentStarNum != appState.currentDate.dayOfYear
     {
       star.shading = .color(
-        ColorMananger.toColorSecondary(
+        ColorManager.toColorSecondary(
           color: viewModel.habit.color,
           opacity: 0.8
         )
@@ -214,7 +214,7 @@ struct GridTrackerView: View {
     if starPoint.isChecked {
       star.shading =
         .color(
-          ColorMananger.toColorPrimary(color: viewModel.habit.color)
+          ColorManager.toColorPrimary(color: viewModel.habit.color)
         )
     }
 
@@ -222,7 +222,7 @@ struct GridTrackerView: View {
 
     drawDateIndictator(
       for: appState.currentDate,
-      color: ColorMananger.toColorSecondary(
+      color: ColorManager.toColorSecondary(
         color: viewModel.habit.color,
         opacity: 0.75
       ),
@@ -232,7 +232,7 @@ struct GridTrackerView: View {
     )
     drawDateIndictator(
       for: appState.selectedDate,
-      color: ColorMananger.toColorPrimary(
+      color: ColorManager.toColorPrimary(
         color: viewModel.habit.color,
       ),
       context: starContext,

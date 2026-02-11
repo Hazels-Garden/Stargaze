@@ -11,7 +11,7 @@ import Foundation
 import SwiftData
 
 @MainActor
-class SampleData {
+final class SampleData {
   
   static let shared = SampleData()
   
