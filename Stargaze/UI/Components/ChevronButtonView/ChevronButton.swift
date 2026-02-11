@@ -28,7 +28,7 @@ struct ChevronButton: ButtonStyle {
   var buttonColor: Color {
     switch isDisabled {
     case true:
-      Color(.quaternarySystemFill)
+      Color(white: 0.05)
     case false:
       switch buttonType {
       case .small:

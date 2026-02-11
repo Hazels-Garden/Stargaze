@@ -24,7 +24,7 @@ struct GridTrackerView: View {
             context,
             size in
             // TODO: Make random stars "shine" periodically
-            //          let now = timeline.date.timeIntervalSinceReferenceDate
+            let now = timeline.date.timeIntervalSinceReferenceDate
             //          let angle = now.remainder(dividingBy: 3) * 120
 
             for pointsData in viewModel.starPointsData {
@@ -207,7 +207,10 @@ struct GridTrackerView: View {
       && currentStarNum != appState.currentDate.dayOfYear
     {
       star.shading = .color(
-        ColorMananger.toColorSecondary(color: viewModel.habit.color, opacity: 0.8)
+        ColorMananger.toColorSecondary(
+          color: viewModel.habit.color,
+          opacity: 0.8
+        )
       )
     }
 

@@ -34,40 +34,13 @@ struct FooterView: View {
 
   var body: some View {
 
-    let isChecked = Binding(
-      get: {
-        for checkedDay in habit.checkedDays {
-          if appState.getDateOnly(from: checkedDay.date)
-            == appState.getDateOnly(
-              from: appState.selectedDate
-            )
-          {
-            return true
-          }
-        }
-        return false
-      },
-      set: { (newValue: Bool) in
-        if newValue {
-          habit.checkedDays.append(CheckedDays(date: appState.selectedDate))
-        } else {
-          for (index, checkedDay) in habit.checkedDays.enumerated() {
-            if appState.getDateOnly(from: checkedDay.date)
-              == appState.getDateOnly(
-                from: appState.selectedDate
-              )
-            {
-              let removedCheckedDay = habit.checkedDays.remove(at: index)
-              modelContext.delete(removedCheckedDay)
-              try? modelContext.save()
-            }
-          }
-        }
-      }
-    )
+    let isChecked = ToggleBinding(
+      habit: habit,
+      modelContext: modelContext
+    ).isChecked
 
     VStack(spacing: 10) {
-      HStack {
+      HStack(spacing: 16) {
 
         Button("Previous Day", systemImage: "chevron.left") {
           appState.selectedDate.toPreviousDay()
@@ -105,11 +78,7 @@ struct FooterView: View {
       // Padding between grid view and footer
       .padding(.top, 40)
 
-      Text("Streak: 3 • Total: 10")
-        .SGLarge()
-        .fontWidth(.compressed)
-        .foregroundStyle(.secondary)
-        .border(showBorder ? .purple : .clear)
+      FooterStatsView(habit: habit, showBorder: showBorder)
 
       Button {
         appState.selectedDate = appState.currentDate

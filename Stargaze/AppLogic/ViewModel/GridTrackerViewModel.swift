@@ -262,10 +262,5 @@ final class GridTrackerViewModel {
           == appState.currentDate.dayOfYear
       else { return }
     }
-    self.resetTappedStarPoint()
-  }
-
-  @objc func resetTappedStarPoint() {
-    self.tappedStarPoint = nil
   }
 }
