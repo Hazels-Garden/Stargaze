@@ -17,10 +17,9 @@ struct HabitTabView: View {
   // MARK: Apparently TabView in page mode has perf issues
   // MARK: that is somewhat allieviated by a pointless sel binding
   // MARK: We may need to go UIKit on this.
-  @State var selection: Int
   
     var body: some View {
-      return TabView(selection: $selection) {
+      return TabView() {
         ForEach(habits) {habit in
           HabitView(habit: habit)
         }
@@ -31,7 +30,7 @@ struct HabitTabView: View {
 }
 
 #Preview {
-  HabitTabView(selection: 0)
+  HabitTabView()
     .modelContainer(SampleData.shared.modelContainer)
     .environment(AppState.shared)
 }

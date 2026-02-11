@@ -19,7 +19,7 @@ struct ContentView: View {
 
   var body: some View {
     ZStack {
-      HabitTabView(selection: 0)
+      HabitTabView()
     }
     .ignoresSafeArea()
     .environment(appState)

@@ -53,7 +53,7 @@ class Habit {
     Habit(
       title: "Run 5k",
       desc: "9:00AM • Run at least 5k everyday",
-      color: ["hue": 0.09167, "sat": 0.83, "bri": 0.84, "opa": 1],
+      color: ["hue": 0.0667, "sat": 0.83, "bri": 0.84, "opa": 1],
       sortOrder: 0,
       checkedDays: [
         CheckedDays(date: Date(timeIntervalSince1970: 1_767_249_000)),  // 2026-01-01
