@@ -19,6 +19,7 @@ struct FooterView: View {
   @State var daysRemaining: Int = 365
   @State var resetDateButtonIsVisible: Bool = false
   @State var checkedDaysSet: Set<DateComponents> = Set()
+  @Binding var isPresented: Bool
 
   var disablePreviousChevron: Bool {
     let selectedDate = appState.getDateOnly(from: appState.selectedDate)
@@ -87,12 +88,13 @@ struct FooterView: View {
         Text("Reset to current date")
           .SGNormal()
           .fontWidth(.condensed)
-          .foregroundStyle(ColorMananger.toColorSecondary(color: habit.color))
+          .foregroundStyle(ColorManager.toColorSecondary(color: habit.color))
       }
       .opacity(resetDateButtonIsVisible ? 1 : 0)
       .animation(.smooth, value: resetDateButtonIsVisible)
     }
-    .frame(maxHeight: .infinity, alignment: .top)
+    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    .contentShape(Rectangle())
     .border(showBorder ? .purple : .clear)
     .onAppear {
       createCheckedDaysSet()
@@ -104,6 +106,18 @@ struct FooterView: View {
     .onChange(of: habit.checkedDays) {
       createCheckedDaysSet()
     }
+    .gesture(
+      DragGesture(minimumDistance: 24, coordinateSpace: .local).onChanged {
+        value in
+        let verticalAmount = value.translation.height
+        if verticalAmount < 0 && !isPresented {
+          isPresented = true
+        }
+        if verticalAmount > 0 && isPresented {
+          isPresented = false
+        }
+      }
+    )
   }
 
   func createCheckedDaysSet() {
@@ -138,6 +152,7 @@ struct FooterView: View {
       ]
     ),
     showBorder: false,
+    isPresented: .constant(true)
   )
   .environment(AppState.shared)
 }

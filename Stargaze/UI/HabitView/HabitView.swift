@@ -11,6 +11,9 @@ import SwiftUI
 
 struct HabitView: View {
 
+  @State var isPresented: Bool = false
+  @State var selectedDetent: Detent.DetentEnum = .peek
+
   let habit: Habit
   // For debug purposes only. Please turn this off when shipping!
   let showBorder: Bool = false
@@ -58,15 +61,42 @@ struct HabitView: View {
         GridTrackerFooterView(showBorder: showBorder)
           .padding(.horizontal, chromeHorizontalPadding)
 
+        // No padding because of observation deck drag gesture
         FooterView(
           habit: habit,
-          showBorder: showBorder
+          showBorder: false,
+          isPresented: $isPresented
         )
-        .padding(.horizontal, chromeHorizontalPadding)
       }
       .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-
+    .detentSheet(
+      isPresented: $isPresented,
+      selectedDetent: $selectedDetent
+    ) { selectedDetentEnum in
+      ZStack{
+        if selectedDetentEnum.wrappedValue == .peek {
+          Text(
+            ""
+          )
+            .transition(
+              .offset(x:0, y: -Detent.peekHeight)
+              .combined(with: .blurReplace)
+              .combined(with: .opacity)
+            )
+        } else if selectedDetentEnum.wrappedValue == .full {
+          Text("")
+            .transition(
+              .offset(x: 0, y: Detent.peekHeight)
+              .combined(with: .blurReplace)
+              .combined(with: .opacity)
+            )
+        }
+      }
+      .ignoresSafeArea()
+      .padding(.all, 24)
+      .animation(.spring(duration: 1), value: selectedDetentEnum.wrappedValue)
+    }
   }
 }
 
