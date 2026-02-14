@@ -38,10 +38,11 @@ struct DetentSheetPresenter<SheetContent: View>: ViewModifier {
       )
       .presentationContentInteraction(sheetInteraction)
       .presentationDragIndicator(.hidden)
-      .ignoresSafeArea()
 
     content
       .sheet(isPresented: $isPresented) {
+        selectedDetentEnum = .peek
+      } content: {
         if #available(iOS 26.0, *) {
           sheetContentBase
         } else {
