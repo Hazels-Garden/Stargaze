@@ -38,6 +38,7 @@ struct GridTrackerFooterView: View {
             isDisabled: disablePreviousChevron
           )
         )
+        .contentShape(Rectangle())
         .border(showBorder ? .green : .clear)
         .disabled(disablePreviousChevron)
 
@@ -56,6 +57,7 @@ struct GridTrackerFooterView: View {
             isDisabled: disableNextChevron
           )
         )
+        .contentShape(Rectangle())
         .border(showBorder ? .green : .clear)
         .disabled(disableNextChevron)
       }
@@ -79,14 +81,11 @@ struct GridTrackerFooterView: View {
   func onPreviousChevron() {
     appState.selectedYear -= 1
     if appState.selectedYear != appState.currentYear {
-      appState.selectedDate = calendar
-        .date(
-          from: DateComponents(
-            year: appState.selectedYear,
-            month: 1,
-            day: 1
-          )
-        )!
+      appState.selectedDate = DateOnly(
+        day: 1,
+        month: 1,
+        year: appState.selectedYear
+      )
     } else {
       appState.selectedDate = appState.currentDate
     }
@@ -95,14 +94,11 @@ struct GridTrackerFooterView: View {
   func onNextChevron() {
     appState.selectedYear += 1
     if appState.selectedYear != appState.currentYear {
-      appState.selectedDate = calendar
-        .date(
-          from: DateComponents(
-            year: appState.selectedYear,
-            month: 1,
-            day: 1
-          )
-        )!
+      appState.selectedDate = DateOnly(
+        day: 1,
+        month: 1,
+        year: appState.selectedYear
+      )
     } else {
       appState.selectedDate = appState.currentDate
     }
@@ -111,7 +107,7 @@ struct GridTrackerFooterView: View {
   func getDaysRemaining() {
     let daysInSelectedYear = appState.calculateDaysInSelectedYear()
     if appState.selectedYear == appState.currentYear {
-      daysRemaining = daysInSelectedYear - appState.currentDate.dayOfYear
+      daysRemaining = daysInSelectedYear - appState.currentDate.dayOfYear()
     } else {
       daysRemaining = daysInSelectedYear
     }
