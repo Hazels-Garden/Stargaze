@@ -15,11 +15,13 @@ import SwiftUI
 final class AppState {
 
   static let shared = AppState(
-    currentYear: Calendar.current.component(.year, from: .now),
-    selectedYear: Calendar.current.component(.year, from: .now),
-    currentDate: Date.now,
-    selectedDate: Date.now,
+    currentYear: Calendar(identifier: .gregorian).component(.year, from: .now),
+    selectedYear: Calendar(identifier: .gregorian).component(.year, from: .now),
+    currentDate: Date.from(now: true)!, // This is a custom extension that returns date at noon.
+    selectedDate: Date.from(now: true)!,
   )
+  
+  let calendar = Calendar(identifier: .gregorian)
 
   let currentYear: Int
   var selectedYear: Int
@@ -40,8 +42,8 @@ final class AppState {
 
   func calculateDaysInSelectedYear() -> Int {
     let dateComponents = DateComponents(year: self.selectedYear)
-    let date = Calendar.current.date(from: dateComponents)!
-    let range = Calendar.current.range(of: .day, in: .year, for: date)!
+    let date = calendar.date(from: dateComponents)!
+    let range = calendar.range(of: .day, in: .year, for: date)!
     return range.count
   }
 
@@ -61,11 +63,11 @@ final class AppState {
     var dateComponents = DateComponents()
     dateComponents.year = self.selectedYear
     dateComponents.day = dayOfYear
-    return Calendar.current.date(from: dateComponents)
+    return calendar.date(from: dateComponents)
   }
 
   func getDateOnly(from date: Date) -> DateComponents {
-    let calender = Calendar.current
+    let calender = calendar
     return calender.dateComponents(
       [.year, .month, .day],
       from: date
