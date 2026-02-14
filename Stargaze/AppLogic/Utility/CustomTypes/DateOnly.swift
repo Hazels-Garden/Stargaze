@@ -9,6 +9,7 @@
 
 import Foundation
 
+nonisolated
 struct DateOnly: Codable, Hashable, Comparable {
   static func < (lhs: DateOnly, rhs: DateOnly) -> Bool {
     Date.from(year: lhs.year, month: lhs.month, day: lhs.day)! < Date.from(year: rhs.year, month: rhs.month, day: rhs.day)!

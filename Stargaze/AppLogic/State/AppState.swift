@@ -14,12 +14,7 @@ import SwiftUI
 @Observable
 final class AppState {
 
-  static let shared = AppState(
-    currentYear: Calendar(identifier: .gregorian).component(.year, from: .now),
-    selectedYear: Calendar(identifier: .gregorian).component(.year, from: .now),
-    currentDate: DateOnly.now(),  // This is a custom extension that returns date at noon.
-    selectedDate: DateOnly.now(),
-  )
+  static let shared = AppState()
 
   let calendar = Calendar(identifier: .gregorian)
   let currentYear: Int
@@ -27,11 +22,11 @@ final class AppState {
   let currentDate: DateOnly
   var selectedDate: DateOnly
 
-  private init(
-    currentYear: Int,
-    selectedYear: Int,
-    currentDate: DateOnly,
-    selectedDate: DateOnly,
+  init(
+    currentYear: Int = Calendar(identifier: .gregorian).component(.year, from: .now),
+    selectedYear: Int = Calendar(identifier: .gregorian).component(.year, from: .now),
+    currentDate: DateOnly = DateOnly.now(),
+    selectedDate: DateOnly = DateOnly.now(),
   ) {
     self.currentYear = currentYear
     self.selectedYear = selectedYear

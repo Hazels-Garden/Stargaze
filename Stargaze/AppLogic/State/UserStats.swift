@@ -13,16 +13,7 @@ import SwiftUI
 @Observable
 final class UserStats {
 
-  static let shared = UserStats(
-    habit: Habit(),
-    totalYear: 0,
-    totalAllTime: 0,
-    curStreak: 0,
-    bestStreak: 0,
-    habitStartDate: nil,
-    sortedCheckedDaysOfSelectedYear: [],
-    checkedDaysListByYear: [:],
-  )
+  static let shared = UserStats()
 
   let appState = AppState.shared
   var habit: Habit
@@ -34,15 +25,15 @@ final class UserStats {
   var sortedCheckedDaysOfSelectedYear: [CheckedDays]?
   var checkedDaysListByYear: [Int: [CheckedDays]]
 
-  private init(
-    habit: Habit,
-    totalYear: Int,
-    totalAllTime: Int,
-    curStreak: Int,
-    bestStreak: Int,
-    habitStartDate: DateOnly?,
-    sortedCheckedDaysOfSelectedYear: [CheckedDays]?,
-    checkedDaysListByYear: [Int: [CheckedDays]]
+  init(
+    habit: Habit = Habit(),
+    totalYear: Int = 0,
+    totalAllTime: Int = 0,
+    curStreak: Int = 0,
+    bestStreak: Int = 0,
+    habitStartDate: DateOnly? = nil,
+    sortedCheckedDaysOfSelectedYear: [CheckedDays]? = [],
+    checkedDaysListByYear: [Int: [CheckedDays]] = [:]
   ) {
     self.habit = habit
     self.totalYear = totalYear

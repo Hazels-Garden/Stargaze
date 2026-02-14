@@ -37,7 +37,7 @@ struct UserStatsTests {
     )
   ]
 
-  let userStats = UserStats.shared
+  let userStats = UserStats()
 
   @Test("Test Initialization of userStats")
   func testInitialization() async throws {
@@ -88,6 +88,7 @@ struct UserStatsTests {
   @Test("Test habit start date user stats")
   func testHabitStartDate() async throws {
     userStats.miniInitalizeUserStats(habit: testingData[0])
+    userStats.getTotalAllTime() // There is a gaurd on allTime in habitStartDate
     userStats.getHabitStartDate()
     #expect(
       userStats.habitStartDate == DateOnly(day: 1, month: 1, year: 2025)
@@ -139,6 +140,7 @@ struct UserStatsTests {
     userStats.initHabitOnly(habit: testingData[0])
     if let result = userStats.getCheckedDaysForSelectedYear() {
       for res in result {
+        print(res.date)
         testCheckedDaysDateList.append(res.date)
       }
     }
