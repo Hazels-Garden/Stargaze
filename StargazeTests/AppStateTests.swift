@@ -17,7 +17,7 @@ import Testing
 struct AppStateTests {
 
   let calendar = Calendar(identifier: .gregorian)
-  let appState = AppStateDateOnly.shared
+  let appState = AppState.shared
 
   @Test("Test the initialization")
   func testInit() async throws {

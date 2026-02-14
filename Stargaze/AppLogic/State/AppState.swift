@@ -17,22 +17,21 @@ final class AppState {
   static let shared = AppState(
     currentYear: Calendar(identifier: .gregorian).component(.year, from: .now),
     selectedYear: Calendar(identifier: .gregorian).component(.year, from: .now),
-    currentDate: Date.from(now: true)!, // This is a custom extension that returns date at noon.
-    selectedDate: Date.from(now: true)!,
+    currentDate: DateOnly.now(),  // This is a custom extension that returns date at noon.
+    selectedDate: DateOnly.now(),
   )
-  
-  let calendar = Calendar(identifier: .gregorian)
 
+  let calendar = Calendar(identifier: .gregorian)
   let currentYear: Int
   var selectedYear: Int
-  let currentDate: Date
-  var selectedDate: Date
+  let currentDate: DateOnly
+  var selectedDate: DateOnly
 
   private init(
     currentYear: Int,
     selectedYear: Int,
-    currentDate: Date,
-    selectedDate: Date,
+    currentDate: DateOnly,
+    selectedDate: DateOnly,
   ) {
     self.currentYear = currentYear
     self.selectedYear = selectedYear
@@ -55,23 +54,20 @@ final class AppState {
       locale: Locale.current
     )
     dateFormatter.dateFormat = "EEEE, \(userLocaleDateFormat ?? "01/01")"
-    let dateString = dateFormatter.string(from: self.selectedDate)
+    let dateString = dateFormatter.string(
+      from: Date.from(dateOnly: self.selectedDate)!
+    )
     return dateString
   }
 
-  func calculateDateFromSelectedDayOfYear(dayOfYear: Int) -> Date? {
+  func calculateDateFromSelectedDayOfYear(dayOfYear: Int) -> DateOnly? {
     var dateComponents = DateComponents()
     dateComponents.year = self.selectedYear
     dateComponents.day = dayOfYear
-    return calendar.date(from: dateComponents)
+    if let date = calendar.date(from: dateComponents) {
+      return DateOnly.from(date: date)
+    } else {
+      return nil
+    }
   }
-
-  func getDateOnly(from date: Date) -> DateComponents {
-    let calender = calendar
-    return calender.dateComponents(
-      [.year, .month, .day],
-      from: date
-    )
-  }
-
 }

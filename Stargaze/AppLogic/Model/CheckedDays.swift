@@ -12,11 +12,11 @@ import SwiftData
 
 @Model
 class CheckedDays {
-  var date: Date
+  var date: DateOnly
 
   // Goal Tracking not included currently.
 
-  init(date: Date) {
+  init(date: DateOnly) {
     self.date = date
   }
 }

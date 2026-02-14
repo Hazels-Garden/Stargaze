@@ -25,14 +25,14 @@ struct UserStatsTests {
       color: ["hue": 0.0667, "sat": 0.83, "bri": 0.84, "opa": 1],
       sortOrder: 0,
       checkedDays: [
-        CheckedDays(date: Date.from(year: 2025, month: 1, day: 1)!),  // 2025-01-01
-        CheckedDays(date: Date.from(month: 1, day: 1)!),  // 2026-01-01 (or whatever current year)
-        CheckedDays(date: Date.from(month: 1, day: 2)!),  // 2026-01-02 (or whatever current year)
-        CheckedDays(date: Date.from(month: 1, day: 5)!),  // 2026-01-05 (or whatever current year)
-        CheckedDays(date: Date.from(month: 1, day: 6)!),  // 2026-01-06 (or whatever current year)
-        CheckedDays(date: Date.from(month: 1, day: 7)!),  // 2026-01-07 (or whatever current year)
-        CheckedDays(date: Date.from(month: 1, day: 8)!),  // 2026-01-08 (or whatever current year)
-        CheckedDays(date: Date.from(now: true)!),  // today
+        CheckedDays(date: DateOnly(day: 1, month: 1, year: 2025)),  // 2025-01-01
+        CheckedDays(date: DateOnly(day: 1, month: 1)),  // 2026-01-01 (or whatever current year)
+        CheckedDays(date: DateOnly(day: 2, month: 1)),  // 2026-01-02 (or whatever current year)
+        CheckedDays(date: DateOnly(day: 5, month: 1)),  // 2026-01-05 (or whatever current year)
+        CheckedDays(date: DateOnly(day: 6, month: 1)),  // 2026-01-06 (or whatever current year)
+        CheckedDays(date: DateOnly(day: 7, month: 1)),  // 2026-01-07 (or whatever current year)
+        CheckedDays(date: DateOnly(day: 8, month: 1)),  // 2026-01-08 (or whatever current year)
+        CheckedDays(date: DateOnly.now()),  // today
       ]
     )
   ]
@@ -55,7 +55,10 @@ struct UserStatsTests {
   func testTotalYear() async throws {
     userStats.miniInitalizeUserStats(habit: testingData[0])
     userStats.getTotalYear()
-    #expect(userStats.totalYear == 7, "The current year count in testingData is 7")
+    #expect(
+      userStats.totalYear == 7,
+      "The current year count in testingData is 7"
+    )
   }
 
   @Test("Test total all time user stats")
@@ -76,7 +79,10 @@ struct UserStatsTests {
   func testCurrentStreak() async throws {
     userStats.miniInitalizeUserStats(habit: testingData[0])
     userStats.getcurrentStreak()
-    #expect(userStats.curStreak == 1, "Unless it's Jan 5-8, this test should pass (fix pls)")
+    #expect(
+      userStats.curStreak == 1,
+      "Unless it's Jan 5-8, this test should pass (fix pls)"
+    )
   }
 
   @Test("Test habit start date user stats")
@@ -90,21 +96,21 @@ struct UserStatsTests {
 
   @Test("Test checked days list by year")
   func testCheckedDaysListByYear() async throws {
-    var testCheckedDaysDateList: [Date] = []
+    var testCheckedDaysDateList: [DateOnly] = []
     let testAgainstDates = [
-      Date.from(year: 2025, month: 1, day: 1)!,
-      Date.from(month: 1, day: 1)!,
-      Date.from(month: 1, day: 2)!,
-      Date.from(month: 1, day: 5)!,
-      Date.from(month: 1, day: 6)!,
-      Date.from(month: 1, day: 7)!,
-      Date.from(month: 1, day: 8)!,
-      Date.from(now: true)!,
+      DateOnly(day: 1, month: 1, year: 2025),  // 2025-01-01
+      DateOnly(day: 1, month: 1),  // 2026-01-01 (or whatever current year)
+      DateOnly(day: 2, month: 1),  // 2026-01-02 (or whatever current year)
+      DateOnly(day: 5, month: 1),  // 2026-01-05 (or whatever current year)
+      DateOnly(day: 6, month: 1),  // 2026-01-06 (or whatever current year)
+      DateOnly(day: 7, month: 1),  // 2026-01-07 (or whatever current year)
+      DateOnly(day: 8, month: 1),  // 2026-01-08 (or whatever current year)
+      DateOnly.now(),
     ]
     userStats.initHabitOnly(habit: testingData[0])
     userStats.getCheckedDaysListByYear()
     for (year, checkedDaysList) in userStats.checkedDaysListByYear {
-      #expect(year == 2025 || year == calendar.component(.year, from: Date.now))
+      #expect(year == 2025 || year == DateOnly.now().year)
       for checkedDay in checkedDaysList {
         testCheckedDaysDateList.append(checkedDay.date)
       }
@@ -120,15 +126,15 @@ struct UserStatsTests {
 
   @Test("Test checked days for selected year")
   func testCheckedDaysForSelectedYear() async throws {
-    var testCheckedDaysDateList: [Date] = []
+    var testCheckedDaysDateList: [DateOnly] = []
     let testAgainstDates = [
-      Date.from(month: 1, day: 1)!,
-      Date.from(month: 1, day: 2)!,
-      Date.from(month: 1, day: 5)!,
-      Date.from(month: 1, day: 6)!,
-      Date.from(month: 1, day: 7)!,
-      Date.from(month: 1, day: 8)!,
-      Date.from(now: true)!,
+      DateOnly(day: 1, month: 1),  // 2026-01-01 (or whatever current year)
+      DateOnly(day: 2, month: 1),  // 2026-01-02 (or whatever current year)
+      DateOnly(day: 5, month: 1),  // 2026-01-05 (or whatever current year)
+      DateOnly(day: 6, month: 1),  // 2026-01-06 (or whatever current year)
+      DateOnly(day: 7, month: 1),  // 2026-01-07 (or whatever current year)
+      DateOnly(day: 8, month: 1),  // 2026-01-08 (or whatever current year)
+      DateOnly.now(),
     ]
     userStats.initHabitOnly(habit: testingData[0])
     if let result = userStats.getCheckedDaysForSelectedYear() {
@@ -147,20 +153,20 @@ struct UserStatsTests {
 
   @Test("Test sorted checked days for selected year")
   func testSortedCheckedDaysForSelectedYear() async throws {
-    var testCheckedDaysDateList: [Date] = []
+    var testCheckedDaysDateList: [DateOnly] = []
     let testAgainstDates = [
-      Date.from(month: 1, day: 1)!,
-      Date.from(month: 1, day: 2)!,
-      Date.from(month: 1, day: 5)!,
-      Date.from(month: 1, day: 6)!,
-      Date.from(month: 1, day: 7)!,
-      Date.from(month: 1, day: 8)!,
-      Date.from(now: true)!,
+      DateOnly(day: 1, month: 1),  // 2026-01-01 (or whatever current year)
+      DateOnly(day: 2, month: 1),  // 2026-01-02 (or whatever current year)
+      DateOnly(day: 5, month: 1),  // 2026-01-05 (or whatever current year)
+      DateOnly(day: 6, month: 1),  // 2026-01-06 (or whatever current year)
+      DateOnly(day: 7, month: 1),  // 2026-01-07 (or whatever current year)
+      DateOnly(day: 8, month: 1),  // 2026-01-08 (or whatever current year)
+      DateOnly.now(),
     ]
     userStats.initHabitOnly(habit: testingData[0])
     userStats.getCheckedDaysListByYear()
     userStats.getSortedCheckedDaysOfSelectedYear()
-      if let result = userStats.sortedCheckedDaysOfSelectedYear {
+    if let result = userStats.sortedCheckedDaysOfSelectedYear {
       for res in result {
         testCheckedDaysDateList.append(res.date)
       }
@@ -170,12 +176,12 @@ struct UserStatsTests {
       #expect(testCheckedDayDate == testAgainstDates[index])
     }
   }
-  
-//  Missing Test Cases
-//  
-//  Empty habit (no checked days)
-//  Single day habit
-//  Multi-year streaks
-//  Gaps in streaks
-//  Invalid/future dates
+
+  //  Missing Test Cases
+  //
+  //  Empty habit (no checked days)
+  //  Single day habit
+  //  Multi-year streaks
+  //  Gaps in streaks
+  //  Invalid/future dates
 }

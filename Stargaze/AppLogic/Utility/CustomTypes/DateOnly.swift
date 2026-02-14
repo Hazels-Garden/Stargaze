@@ -47,4 +47,16 @@ struct DateOnly: Codable, Hashable, Comparable {
     )
     return date?.dayOfYear ?? 1
   }
+  
+  mutating func toPreviousDay() {
+    var date = Date.from(dateOnly: self)
+    date?.toPreviousDay()
+    self = DateOnly.from(date: date!)
+  }
+  
+  mutating func toNextDay() {
+    var date = Date.from(dateOnly: self)
+    date?.toNextDay()
+    self = DateOnly.from(date: date!)
+  }
 }

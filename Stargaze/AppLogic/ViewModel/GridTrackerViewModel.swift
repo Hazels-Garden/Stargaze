@@ -128,12 +128,12 @@ final class GridTrackerViewModel {
   func getCheckedDaysSetByYear() {
     self.checkedDaysSetByYear = [:]
     for checkedDay in self.habit.checkedDays {
-      let yearComponent = Date.get(from: checkedDay.date, with: [.year])
-      let dayOfYear = checkedDay.date.dayOfYear
-      if self.checkedDaysSetByYear[yearComponent.year!] == nil {
-        self.checkedDaysSetByYear[yearComponent.year!] = Set()
+      let year = checkedDay.date.year
+      let dayOfYear = checkedDay.date.dayOfYear()
+      if self.checkedDaysSetByYear[year] == nil {
+        self.checkedDaysSetByYear[year] = Set()
       }
-      self.checkedDaysSetByYear[yearComponent.year!]?.insert(dayOfYear)
+      self.checkedDaysSetByYear[year]?.insert(dayOfYear)
     }
   }
 
@@ -238,7 +238,7 @@ final class GridTrackerViewModel {
       .clamped(
         to: 1...daysInSelectedYear
       )
-    if tappedStarInt == appState.currentDate.dayOfYear {
+    if tappedStarInt == appState.currentDate.dayOfYear() {
       // Footer reset view needs selected date to be eq. to current date to work
       appState.selectedDate = appState.currentDate
     } else {
@@ -257,7 +257,7 @@ final class GridTrackerViewModel {
       let closestStarPoint = self.handleDragGesture(value: dragEndValue)
       guard
         self.getStarNum(from: closestStarPoint.point)
-          == appState.currentDate.dayOfYear
+          == appState.currentDate.dayOfYear()
       else { return }
     }
   }

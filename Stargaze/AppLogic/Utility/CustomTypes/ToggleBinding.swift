@@ -21,10 +21,8 @@ struct ToggleBinding {
     Binding(
       get: {
         for checkedDay in habit.checkedDays {
-          if appState.getDateOnly(from: checkedDay.date)
-            == appState.getDateOnly(
-              from: appState.selectedDate
-            )
+          if checkedDay.date
+              == appState.selectedDate
           {
             return true
           }
@@ -35,10 +33,8 @@ struct ToggleBinding {
         if newValue {
           let dateToBeAdded = appState.selectedDate
           for checkedDay in habit.checkedDays {
-            if appState
-              .getDateOnly(from: checkedDay.date)
-              == appState
-              .getDateOnly(from: dateToBeAdded)
+            if checkedDay.date
+                == dateToBeAdded
             {
               return
             }
@@ -46,10 +42,8 @@ struct ToggleBinding {
           habit.checkedDays.append(CheckedDays(date: dateToBeAdded))
         } else {
           for (index, checkedDay) in habit.checkedDays.enumerated() {
-            if appState.getDateOnly(from: checkedDay.date)
-              == appState.getDateOnly(
-                from: appState.selectedDate
-              )
+            if checkedDay.date
+                == appState.selectedDate
             {
               let removedCheckedDay = habit.checkedDays.remove(at: index)
               modelContext.delete(removedCheckedDay)

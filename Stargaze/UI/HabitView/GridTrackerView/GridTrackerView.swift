@@ -131,7 +131,7 @@ struct GridTrackerView: View {
   }
 
   func drawDateIndictator(
-    for date: Date,
+    for date: DateOnly,
     color: Color,
     context: GraphicsContext,
     size: CGSize,
@@ -151,7 +151,7 @@ struct GridTrackerView: View {
       else { return }
     } else {
       guard
-        viewModel.getStarNum(from: starPoint.intPoint) == date.dayOfYear
+        viewModel.getStarNum(from: starPoint.intPoint) == date.dayOfYear()
       else { return }
     }
     indicatorContext
@@ -202,8 +202,8 @@ struct GridTrackerView: View {
 
     let currentStarNum = viewModel.getStarNum(from: starPoint.intPoint)
 
-    if currentStarNum == appState.selectedDate.dayOfYear
-      && currentStarNum != appState.currentDate.dayOfYear
+    if currentStarNum == appState.selectedDate.dayOfYear()
+      && currentStarNum != appState.currentDate.dayOfYear()
     {
       star.shading = .color(
         ColorManager.toColorSecondary(
@@ -255,19 +255,20 @@ struct GridTrackerView: View {
       habit: Habit(
         color: ["hue": 0.6167, "sat": 0.91, "bri": 0.82, "opa": 1],
         checkedDays: [
-          CheckedDays(date: Date.from(month: 1, day: 3)!), // 202x-01-03
-          CheckedDays(date: Date.from(month: 1, day: 8)!), // 202x-01-08
-          CheckedDays(date: Date.from(month: 1, day: 12)!), // 202x-01-12
-          CheckedDays(date: Date.from(month: 1, day: 13)!), // 202x-01-13
-          CheckedDays(date: Date.from(month: 1, day: 14)!), // 202x-01-14
-          CheckedDays(date: Date.from(month: 1, day: 15)!), // 202x-01-15
-          CheckedDays(date: Date.from(month: 1, day: 17)!), // 202x-01-17
-          CheckedDays(date: Date.from(month: 1, day: 22)!), // 202x-01-22
-          CheckedDays(date: Date.from(month: 1, day: 28)!), // 202x-01-28
-          CheckedDays(date: Date.from(month: 2, day: 2)!), // 202x-02-02
-          CheckedDays(date: Date.from(month: 2, day: 6)!), // 202x-02-06
-          CheckedDays(date: Date.from(month: 2, day: 10)!), // 202x-02-10
-          CheckedDays(date: Date.from(now: true)!)
+          CheckedDays(date: DateOnly(day: 6, month: 1)), // 2026-01-06
+          CheckedDays(date: DateOnly(day: 8, month: 1)), // 2026-01-08
+          CheckedDays(date: DateOnly(day: 15, month: 1)), // 2026-01-15
+          CheckedDays(date: DateOnly(day: 18, month: 1)), // 2026-01-18
+          CheckedDays(date: DateOnly(day: 21, month: 1)), // 2026-01-21
+          CheckedDays(date: DateOnly(day: 25, month: 1)), // 2026-01-25
+          CheckedDays(date: DateOnly(day: 26, month: 1)), // 2026-01-26
+          CheckedDays(date: DateOnly(day: 27, month: 1)), // 2026-01-27
+          CheckedDays(date: DateOnly(day: 28, month: 1)), // 2026-01-28
+          CheckedDays(date: DateOnly(day: 1, month: 2)), // 2026-02-01
+          CheckedDays(date: DateOnly(day: 4, month: 2)), // 2026-02-04
+          CheckedDays(date: DateOnly(day: 8, month: 2)), // 2026-02-08
+          CheckedDays(date: DateOnly(day: 10, month: 2)), // 2026-02-10
+          CheckedDays(date: DateOnly(day: 14, month: 2)), // 2026-02-14
         ]
       ),
       horizontalPadding: 24,

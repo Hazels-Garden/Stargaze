@@ -89,11 +89,11 @@ final class UserStats {
   func getCheckedDaysListByYear() {
     self.checkedDaysListByYear = [:]
     for checkedDay in self.habit.checkedDays {
-      let yearComponent = Date.get(from: checkedDay.date, with: [.year])
-      if self.checkedDaysListByYear[yearComponent.year!] == nil {
-        self.checkedDaysListByYear[yearComponent.year!] = []
+      let year = checkedDay.date.year
+      if self.checkedDaysListByYear[year] == nil {
+        self.checkedDaysListByYear[year] = []
       }
-      self.checkedDaysListByYear[yearComponent.year!]?.append(checkedDay)
+      self.checkedDaysListByYear[year]?.append(checkedDay)
     }
   }
 
@@ -104,7 +104,7 @@ final class UserStats {
       return
     }
 
-    var oldestDate = Date.now
+    var oldestDate = DateOnly.now()
     for (_, checkedDaysList) in self.checkedDaysListByYear {
       for (_, checkedDay) in checkedDaysList.enumerated() {
         oldestDate = min(oldestDate, checkedDay.date)
@@ -113,12 +113,7 @@ final class UserStats {
         }
       }
     }
-    let components = Date.get(from: oldestDate, with: [.day, .month, .year])
-    self.habitStartDate = DateOnly(
-      day: components.day!,
-      month: components.month!,
-      year: components.year!
-    )
+    self.habitStartDate = oldestDate
   }
 
   func getTotalYear() {
@@ -175,9 +170,9 @@ final class UserStats {
       if index == 0 {
         break
       } else {
-        let today = sortedCheckedDays[index].date.dayOfYear
+        let today = sortedCheckedDays[index].date.dayOfYear()
         let yesterday = sortedCheckedDays[index - 1].date
-          .dayOfYear
+          .dayOfYear()
         if today - 1 == yesterday {
           curStreak += 1
         } else {
@@ -205,9 +200,9 @@ final class UserStats {
       if index == 0 {
         curStreak = 1
       } else {
-        let today = checkedDay.date.dayOfYear
+        let today = checkedDay.date.dayOfYear()
         let yesterday = sortedCheckedDays[index - 1].date
-          .dayOfYear
+          .dayOfYear()
         if today - 1 == yesterday {
           curStreak += 1
         } else {
