@@ -10,6 +10,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 @Observable
 final class GridTrackerViewModel {
   var appState = AppState.shared

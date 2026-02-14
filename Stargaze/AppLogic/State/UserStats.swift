@@ -9,6 +9,7 @@
 
 import SwiftUI
 
+@MainActor
 @Observable
 final class UserStats {
 
