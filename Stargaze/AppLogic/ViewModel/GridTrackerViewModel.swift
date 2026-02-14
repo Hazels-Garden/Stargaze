@@ -127,10 +127,7 @@ final class GridTrackerViewModel {
   func getCheckedDaysSetByYear() {
     self.checkedDaysSetByYear = [:]
     for checkedDay in self.habit.checkedDays {
-      let yearComponent = Calendar.current.dateComponents(
-        [.year],
-        from: checkedDay.date
-      )
+      let yearComponent = Date.get(from: checkedDay.date, with: [.year])
       let dayOfYear = checkedDay.date.dayOfYear
       if self.checkedDaysSetByYear[yearComponent.year!] == nil {
         self.checkedDaysSetByYear[yearComponent.year!] = Set()

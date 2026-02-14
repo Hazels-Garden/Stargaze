@@ -51,4 +51,5 @@ struct GradientBackgroundView: View {
     color: ["hue": 0.6167, "sat": 0.91, "bri": 0.82, "opa": 1]
   )
   .environment(AppState.shared)
+  .environment(UserStats.shared)
 }

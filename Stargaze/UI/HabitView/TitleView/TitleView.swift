@@ -43,4 +43,5 @@ struct TitleView: View {
     desc: "9:00AM • Run at least 5km"
   )
   .environment(AppState.shared)
+  .environment(UserStats.shared)
 }
