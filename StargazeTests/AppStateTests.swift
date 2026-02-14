@@ -23,10 +23,10 @@ struct AppStateTests {
   func testInit() async throws {
     let now = DateOnly.now()
     let curYear = calendar.component(.year, from: Date.now)
-    #expect(appState.currentDate == now)
-    #expect(appState.selectedDate == now)
-    #expect(appState.currentYear == curYear)
-    #expect(appState.selectedYear == curYear)
+    #expect(appState.currentDate == now, "current date is equal to today")
+    #expect(appState.selectedDate == now, "selected date is equal to today")
+    #expect(appState.currentYear == curYear, "current year is equal to this year")
+    #expect(appState.selectedYear == curYear, "selected year is equal to this year")
   }
   
   @Test("Test days in the selected year")
@@ -52,7 +52,7 @@ struct AppStateTests {
     let dateOnly = appState.calculateDateFromSelectedDayOfYear(
       dayOfYear: testDayOfYear
     )
-    #expect(dateOnly == DateOnly(day: 3, month: 2))
+    #expect(dateOnly == DateOnly(day: 3, month: 2), "day of year 34 is Feb 3")
   }
 
 }
