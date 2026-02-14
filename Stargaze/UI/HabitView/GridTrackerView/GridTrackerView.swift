@@ -60,6 +60,16 @@ struct GridTrackerView: View {
             }
         )
       }
+      
+      // Disables the grid indic. from moving when tapping year chevrons
+      VStack(spacing: 0) {
+        Spacer()
+        Rectangle()
+          .fill(.clear)
+          .frame(maxHeight: 8)
+          .contentShape(Rectangle())
+          .onTapGesture {}
+      }
 
       // Debug border rectangle
       Rectangle()
@@ -84,14 +94,6 @@ struct GridTrackerView: View {
     let closestStarPoint = viewModel.handleDragGesture(value: value)
 
     if closestStarPoint.point != viewModel.tappedStarPoint {
-
-      // You have to be close to a star to interact
-      // Squared because the euclidean dist isn't sqrt'd
-      let interactRadius = 12.0
-      guard closestStarPoint.dist < pow(interactRadius, 2) else {
-        return
-      }
-
       viewModel.tappedStarPoint = closestStarPoint.point
       Haptics.shared.play(.rigid)
     }
@@ -253,28 +255,27 @@ struct GridTrackerView: View {
       habit: Habit(
         color: ["hue": 0.6167, "sat": 0.91, "bri": 0.82, "opa": 1],
         checkedDays: [
-          CheckedDays(date: Date(timeIntervalSince1970: 1_767_335_400)),  // 2026-01-02
-          CheckedDays(date: Date(timeIntervalSince1970: 1_767_421_800)),  // 2026-01-03
-          CheckedDays(date: Date(timeIntervalSince1970: 1_767_681_000)),  // 2026-01-06
-          CheckedDays(date: Date(timeIntervalSince1970: 1_767_853_800)),  // 2026-01-08
-          CheckedDays(date: Date(timeIntervalSince1970: 1_768_285_800)),  // 2026-01-13
-          CheckedDays(date: Date(timeIntervalSince1970: 1_768_804_200)),  // 2026-01-19
-          CheckedDays(date: Date(timeIntervalSince1970: 1_769_063_400)),  // 2026-01-22
-          CheckedDays(date: Date(timeIntervalSince1970: 1_769_149_800)),  // 2026-01-23
-          CheckedDays(date: Date(timeIntervalSince1970: 1_769_236_200)),  // 2026-01-24
-          CheckedDays(date: Date(timeIntervalSince1970: 1_769_322_600)),  // 2026-01-25
-          CheckedDays(date: Date(timeIntervalSince1970: 1_769_754_600)),  // 2026-01-30
-          CheckedDays(date: Date(timeIntervalSince1970: 1_770_186_600)),  // 2026-02-04
-          CheckedDays(date: Date(timeIntervalSince1970: 1_770_273_000)),  // 2026-02-05
-          CheckedDays(date: Date(timeIntervalSince1970: 1_770_359_400)),  // 2026-02-06
-          CheckedDays(date: Date(timeIntervalSince1970: 1_770_618_600)),  // 2026-02-09
+          CheckedDays(date: Date.from(month: 1, day: 3)!), // 202x-01-03
+          CheckedDays(date: Date.from(month: 1, day: 8)!), // 202x-01-08
+          CheckedDays(date: Date.from(month: 1, day: 12)!), // 202x-01-12
+          CheckedDays(date: Date.from(month: 1, day: 13)!), // 202x-01-13
+          CheckedDays(date: Date.from(month: 1, day: 14)!), // 202x-01-14
+          CheckedDays(date: Date.from(month: 1, day: 15)!), // 202x-01-15
+          CheckedDays(date: Date.from(month: 1, day: 17)!), // 202x-01-17
+          CheckedDays(date: Date.from(month: 1, day: 22)!), // 202x-01-22
+          CheckedDays(date: Date.from(month: 1, day: 28)!), // 202x-01-28
+          CheckedDays(date: Date.from(month: 2, day: 2)!), // 202x-02-02
+          CheckedDays(date: Date.from(month: 2, day: 6)!), // 202x-02-06
+          CheckedDays(date: Date.from(month: 2, day: 10)!), // 202x-02-10
+          CheckedDays(date: Date.from(now: true)!)
         ]
       ),
       horizontalPadding: 24,
       verticalPadding: 16,
       canvasHeight: 420,
     ),
-    showBorder: false
+    showBorder: true
   )
   .environment(AppState.shared)
+  .environment(UserStats.shared)
 }

@@ -1,5 +1,5 @@
 //
-//  ActionToggle.swift
+//  ActionToggleStyle.swift
 //  Stargaze
 //
 //  Created by Hazel Nishad on 20/1/26.
@@ -9,7 +9,7 @@
 
 import SwiftUI
 
-struct ActionToggle: ToggleStyle {
+struct ActionToggleStyle: ToggleStyle {
 
   let color: [String: Double]
   var buttonColorVal: [String: Double] {

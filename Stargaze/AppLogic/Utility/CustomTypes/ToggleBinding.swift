@@ -8,8 +8,8 @@
 //
 
 import Foundation
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct ToggleBinding {
   var appState = AppState.shared
@@ -32,7 +32,17 @@ struct ToggleBinding {
       },
       set: { (newValue: Bool) in
         if newValue {
-          habit.checkedDays.append(CheckedDays(date: appState.selectedDate))
+          let dateToBeAdded = appState.selectedDate
+          for checkedDay in habit.checkedDays {
+            if appState
+              .getDateOnly(from: checkedDay.date)
+              == appState
+              .getDateOnly(from: dateToBeAdded)
+            {
+              return
+            }
+          }
+          habit.checkedDays.append(CheckedDays(date: dateToBeAdded))
         } else {
           for (index, checkedDay) in habit.checkedDays.enumerated() {
             if appState.getDateOnly(from: checkedDay.date)

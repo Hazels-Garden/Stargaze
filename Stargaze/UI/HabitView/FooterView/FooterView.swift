@@ -30,7 +30,11 @@ struct FooterView: View {
     return selectedDate.day == 31 && selectedDate.month == 12
   }
   var disableActionToggle: Bool {
-    return appState.selectedDate.dayOfYear > appState.currentDate.dayOfYear
+    return
+      (appState.selectedYear > appState.currentYear
+      || (appState.selectedDate.dayOfYear > appState.currentDate.dayOfYear
+        && appState
+          .selectedYear == appState.currentYear))
   }
 
   var body: some View {
@@ -59,7 +63,7 @@ struct FooterView: View {
           ToggleTextView(text: appState.formattedDateFromSelectedDate())
             .animation(.smooth(duration: 0.25), value: appState.selectedDate)
         }
-        .toggleStyle(ActionToggle(color: habit.color))
+        .toggleStyle(ActionToggleStyle(color: habit.color))
         .border(showBorder ? .purple : .clear)
         .disabled(disableActionToggle)
 
@@ -134,25 +138,24 @@ struct FooterView: View {
     habit: Habit(
       color: ["hue": 0.6167, "sat": 0.91, "bri": 0.82, "opa": 1],
       checkedDays: [
-        CheckedDays(date: Date(timeIntervalSince1970: 1_767_335_400)),  // 2026-01-02
-        CheckedDays(date: Date(timeIntervalSince1970: 1_767_421_800)),  // 2026-01-03
-        CheckedDays(date: Date(timeIntervalSince1970: 1_767_681_000)),  // 2026-01-06
-        CheckedDays(date: Date(timeIntervalSince1970: 1_767_853_800)),  // 2026-01-08
-        CheckedDays(date: Date(timeIntervalSince1970: 1_768_285_800)),  // 2026-01-13
-        CheckedDays(date: Date(timeIntervalSince1970: 1_768_804_200)),  // 2026-01-19
-        CheckedDays(date: Date(timeIntervalSince1970: 1_769_063_400)),  // 2026-01-22
-        CheckedDays(date: Date(timeIntervalSince1970: 1_769_149_800)),  // 2026-01-23
-        CheckedDays(date: Date(timeIntervalSince1970: 1_769_236_200)),  // 2026-01-24
-        CheckedDays(date: Date(timeIntervalSince1970: 1_769_322_600)),  // 2026-01-25
-        CheckedDays(date: Date(timeIntervalSince1970: 1_769_754_600)),  // 2026-01-30
-        CheckedDays(date: Date(timeIntervalSince1970: 1_770_186_600)),  // 2026-02-04
-        CheckedDays(date: Date(timeIntervalSince1970: 1_770_273_000)),  // 2026-02-05
-        CheckedDays(date: Date(timeIntervalSince1970: 1_770_359_400)),  // 2026-02-06
-        CheckedDays(date: Date(timeIntervalSince1970: 1_770_618_600)),  // 2026-02-09
+        CheckedDays(date: Date.from(month: 1, day: 3)!), // 202x-01-03
+        CheckedDays(date: Date.from(month: 1, day: 8)!), // 202x-01-08
+        CheckedDays(date: Date.from(month: 1, day: 12)!), // 202x-01-12
+        CheckedDays(date: Date.from(month: 1, day: 13)!), // 202x-01-13
+        CheckedDays(date: Date.from(month: 1, day: 14)!), // 202x-01-14
+        CheckedDays(date: Date.from(month: 1, day: 15)!), // 202x-01-15
+        CheckedDays(date: Date.from(month: 1, day: 17)!), // 202x-01-17
+        CheckedDays(date: Date.from(month: 1, day: 22)!), // 202x-01-22
+        CheckedDays(date: Date.from(month: 1, day: 28)!), // 202x-01-28
+        CheckedDays(date: Date.from(month: 2, day: 2)!), // 202x-02-02
+        CheckedDays(date: Date.from(month: 2, day: 6)!), // 202x-02-06
+        CheckedDays(date: Date.from(month: 2, day: 10)!), // 202x-02-10
+        CheckedDays(date: Date.from(now: true)!)
       ]
     ),
     showBorder: false,
     isPresented: .constant(true)
   )
   .environment(AppState.shared)
+  .environment(UserStats.shared)
 }

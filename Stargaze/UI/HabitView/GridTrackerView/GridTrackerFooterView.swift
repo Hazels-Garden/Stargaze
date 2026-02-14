@@ -14,6 +14,8 @@ struct GridTrackerFooterView: View {
   let showBorder: Bool
   @Environment(AppState.self) private var appState
   @State var daysRemaining: Int = 365
+  
+  let calendar = Calendar(identifier: .gregorian)
 
   var disablePreviousChevron: Bool {
     appState.selectedYear <= 2010
@@ -77,7 +79,7 @@ struct GridTrackerFooterView: View {
   func onPreviousChevron() {
     appState.selectedYear -= 1
     if appState.selectedYear != appState.currentYear {
-      appState.selectedDate = Calendar.current
+      appState.selectedDate = calendar
         .date(
           from: DateComponents(
             year: appState.selectedYear,
@@ -93,7 +95,7 @@ struct GridTrackerFooterView: View {
   func onNextChevron() {
     appState.selectedYear += 1
     if appState.selectedYear != appState.currentYear {
-      appState.selectedDate = Calendar.current
+      appState.selectedDate = calendar
         .date(
           from: DateComponents(
             year: appState.selectedYear,
@@ -120,4 +122,5 @@ struct GridTrackerFooterView: View {
 #Preview {
   GridTrackerFooterView(showBorder: true)
     .environment(AppState.shared)
+    .environment(UserStats.shared)
 }

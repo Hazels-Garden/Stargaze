@@ -15,7 +15,7 @@ struct Detent {
   static var peekHeight: CGFloat = 180
   
   static var peekDetent: PresentationDetent {
-    .height(180)
+    .height(Detent.peekHeight)
   }
   
   static var fullDetent: PresentationDetent {
