@@ -11,6 +11,7 @@ import Foundation
 import SwiftData
 import SwiftUI
 
+@MainActor
 struct ToggleBinding {
   var appState = AppState.shared
   var habit: Habit
