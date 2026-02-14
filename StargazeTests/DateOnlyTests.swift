@@ -64,4 +64,28 @@ struct DateOnlyTests {
     )
   }
 
+  @Test("Test to previous day")
+  func testToPreviousDay() async throws {
+    var date = DateOnly(day: 1, month: 1, year: 2026)
+    date.toPreviousDay()
+    let testAgainstDate = DateOnly(day: 31, month: 12, year: 2025)
+    #expect(
+      date.day == testAgainstDate.day
+        && date.month == testAgainstDate.month
+        && date.year == testAgainstDate.year
+    )
+  }
+
+  @Test("Test to next day")
+  func testToNextDay() async throws {
+    var date = DateOnly(day: 31, month: 1, year: 2026)
+    date.toNextDay()
+    let testAgainstDate = DateOnly(day: 1, month: 2, year: 2026)
+    #expect(
+      date.day == testAgainstDate.day
+      && date.month == testAgainstDate.month
+      && date.year == testAgainstDate.year
+    )
+  }
+
 }

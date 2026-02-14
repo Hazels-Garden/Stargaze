@@ -182,8 +182,5 @@ struct UserStatsTests {
   //  Missing Test Cases
   //
   //  Empty habit (no checked days)
-  //  Single day habit
-  //  Multi-year streaks
-  //  Gaps in streaks
   //  Invalid/future dates
 }

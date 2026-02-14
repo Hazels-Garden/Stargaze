@@ -116,9 +116,7 @@ struct FooterView: View {
         let verticalAmount = value.translation.height
         if verticalAmount < 0 && !isPresented {
           isPresented = true
-        }
-        if verticalAmount > 0 && isPresented {
-          isPresented = false
+          Haptics.shared.play(.medium)
         }
       }
     )
