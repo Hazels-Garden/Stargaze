@@ -61,6 +61,7 @@ struct ChevronButton: ButtonStyle {
       .font(.system(size: buttonType == .small ? 13 : 24))
       // Increasing small button touch target
       .padding(smallButtonPaddingDir, buttonType == .small ? 12 : 0)
+      .padding(.vertical, buttonType == .small ? 8 : 0)
       .fontWeight(.bold)
       .foregroundStyle(
         configuration.isPressed ? pressedButtonColor : buttonColor

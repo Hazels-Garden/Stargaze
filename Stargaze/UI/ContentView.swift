@@ -14,6 +14,7 @@ struct ContentView: View {
 
   @Environment(\.modelContext) var modelContext
   var appState = AppState.shared
+  var userStats = UserStats.shared
 
   var body: some View {
     ZStack {
@@ -21,6 +22,7 @@ struct ContentView: View {
     }
     .ignoresSafeArea()
     .environment(appState)
+    .environment(userStats)
   }
 }
 

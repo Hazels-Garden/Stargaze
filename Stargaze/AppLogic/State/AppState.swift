@@ -14,23 +14,19 @@ import SwiftUI
 @Observable
 final class AppState {
 
-  static let shared = AppState(
-    currentYear: Calendar.current.component(.year, from: .now),
-    selectedYear: Calendar.current.component(.year, from: .now),
-    currentDate: Date.now,
-    selectedDate: Date.now,
-  )
+  static let shared = AppState()
 
+  let calendar = Calendar(identifier: .gregorian)
   let currentYear: Int
   var selectedYear: Int
-  let currentDate: Date
-  var selectedDate: Date
+  let currentDate: DateOnly
+  var selectedDate: DateOnly
 
-  private init(
-    currentYear: Int,
-    selectedYear: Int,
-    currentDate: Date,
-    selectedDate: Date,
+  init(
+    currentYear: Int = Calendar(identifier: .gregorian).component(.year, from: .now),
+    selectedYear: Int = Calendar(identifier: .gregorian).component(.year, from: .now),
+    currentDate: DateOnly = DateOnly.now(),
+    selectedDate: DateOnly = DateOnly.now(),
   ) {
     self.currentYear = currentYear
     self.selectedYear = selectedYear
@@ -40,8 +36,8 @@ final class AppState {
 
   func calculateDaysInSelectedYear() -> Int {
     let dateComponents = DateComponents(year: self.selectedYear)
-    let date = Calendar.current.date(from: dateComponents)!
-    let range = Calendar.current.range(of: .day, in: .year, for: date)!
+    let date = calendar.date(from: dateComponents)!
+    let range = calendar.range(of: .day, in: .year, for: date)!
     return range.count
   }
 
@@ -53,23 +49,20 @@ final class AppState {
       locale: Locale.current
     )
     dateFormatter.dateFormat = "EEEE, \(userLocaleDateFormat ?? "01/01")"
-    let dateString = dateFormatter.string(from: self.selectedDate)
+    let dateString = dateFormatter.string(
+      from: Date.from(dateOnly: self.selectedDate)!
+    )
     return dateString
   }
 
-  func calculateDateFromSelectedDayOfYear(dayOfYear: Int) -> Date? {
+  func calculateDateFromSelectedDayOfYear(dayOfYear: Int) -> DateOnly? {
     var dateComponents = DateComponents()
     dateComponents.year = self.selectedYear
     dateComponents.day = dayOfYear
-    return Calendar.current.date(from: dateComponents)
+    if let date = calendar.date(from: dateComponents) {
+      return DateOnly.from(date: date)
+    } else {
+      return nil
+    }
   }
-
-  func getDateOnly(from date: Date) -> DateComponents {
-    let calender = Calendar.current
-    return calender.dateComponents(
-      [.year, .month, .day],
-      from: date
-    )
-  }
-
 }

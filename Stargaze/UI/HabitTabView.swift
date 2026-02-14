@@ -30,4 +30,5 @@ struct HabitTabView: View {
   HabitTabView()
     .modelContainer(SampleData.shared.modelContainer)
     .environment(AppState.shared)
+    .environment(UserStats.shared)
 }

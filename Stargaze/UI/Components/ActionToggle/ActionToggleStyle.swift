@@ -1,5 +1,5 @@
 //
-//  ActionToggle.swift
+//  ActionToggleStyle.swift
 //  Stargaze
 //
 //  Created by Hazel Nishad on 20/1/26.
@@ -9,26 +9,21 @@
 
 import SwiftUI
 
-struct ActionToggle: ToggleStyle {
+struct ActionToggleStyle: ToggleStyle {
 
   let color: [String: Double]
-  var buttonColor: Color {
+  var buttonColorVal: [String: Double] {
     // When opacity is 0, User did not select a color
     switch color["opa"]!
     {
     case 0:
-      Color(
-        hue: 0,
-        saturation: 0,
-        brightness: 0.5
-      )
+      ["hue": 0, "sat": 0, "bri": 0.5]
     default:
-      Color(
-        hue: color["hue"]!,
-        saturation: color["sat"]!,
-        brightness: color["bri"]!
-      )
+      color
     }
+  }
+  var buttonColor: Color {
+    ColorManager.toColor(color: buttonColorVal)
   }
 
   func makeBody(configuration: Configuration) -> some View {
@@ -46,13 +41,28 @@ struct ActionToggle: ToggleStyle {
               .opacity(0.25)
         )
         .foregroundStyle(
-          configuration.isOn ? .primary
-            .opacity(0.8) : Color(.secondaryLabel)
-            .opacity(0.8)
+          configuration.isOn
+            ? .primary
+              .opacity(0.8)
+            : Color(.secondaryLabel)
+              .opacity(0.8)
         )
         .clipShape(
           RoundedRectangle(cornerRadius: 20, style: .continuous)
         )
+        .overlay {
+          RoundedRectangle(cornerRadius: 20, style: .continuous)
+            .stroke(
+              configuration.isOn
+                ? ColorManager
+                  .toColor(color: buttonColorVal, briModifier: 2)
+                : ColorManager
+                  .toColor(color: buttonColorVal, briModifier: 1.4).opacity(
+                    0.25
+                  ),
+              lineWidth: configuration.isOn ? 2 : 1,
+            )
+        }
         .animation(.smooth, value: configuration.isOn)
 
     }

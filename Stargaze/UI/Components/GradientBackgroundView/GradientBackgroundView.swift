@@ -19,8 +19,8 @@ struct GradientBackgroundView: View {
   var body: some View {
     RadialGradient(
       gradient: Gradient(colors: [
-        ColorMananger.toColor(color: color),
-        ColorMananger.toColor(color: color, briModifier: 0.67),
+        ColorManager.toColor(color: color),
+        ColorManager.toColor(color: color, briModifier: 0.67),
         Color.clear,
       ]),
       center: .top,
@@ -51,4 +51,5 @@ struct GradientBackgroundView: View {
     color: ["hue": 0.6167, "sat": 0.91, "bri": 0.82, "opa": 1]
   )
   .environment(AppState.shared)
+  .environment(UserStats.shared)
 }

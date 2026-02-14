@@ -10,7 +10,7 @@
 import Foundation
 import SwiftUI
 
-struct ColorMananger {
+struct ColorManager {
 
   static let inverse360 = 0.002778
 
@@ -22,7 +22,7 @@ struct ColorMananger {
     Color(
       hue: color["hue"]!,
       saturation: color["sat"]!,
-      brightness: color["bri"]! * (briModifier)
+      brightness: (color["bri"]! * (briModifier)).clamped(to: 0...1)
     )
     .opacity(opacity)
   }

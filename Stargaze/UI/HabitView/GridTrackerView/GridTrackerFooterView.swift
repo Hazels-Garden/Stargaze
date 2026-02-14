@@ -14,6 +14,8 @@ struct GridTrackerFooterView: View {
   let showBorder: Bool
   @Environment(AppState.self) private var appState
   @State var daysRemaining: Int = 365
+  
+  let calendar = Calendar(identifier: .gregorian)
 
   var disablePreviousChevron: Bool {
     appState.selectedYear <= 2010
@@ -36,6 +38,7 @@ struct GridTrackerFooterView: View {
             isDisabled: disablePreviousChevron
           )
         )
+        .contentShape(Rectangle())
         .border(showBorder ? .green : .clear)
         .disabled(disablePreviousChevron)
 
@@ -54,6 +57,7 @@ struct GridTrackerFooterView: View {
             isDisabled: disableNextChevron
           )
         )
+        .contentShape(Rectangle())
         .border(showBorder ? .green : .clear)
         .disabled(disableNextChevron)
       }
@@ -77,14 +81,11 @@ struct GridTrackerFooterView: View {
   func onPreviousChevron() {
     appState.selectedYear -= 1
     if appState.selectedYear != appState.currentYear {
-      appState.selectedDate = Calendar.current
-        .date(
-          from: DateComponents(
-            year: appState.selectedYear,
-            month: 1,
-            day: 1
-          )
-        )!
+      appState.selectedDate = DateOnly(
+        day: 1,
+        month: 1,
+        year: appState.selectedYear
+      )
     } else {
       appState.selectedDate = appState.currentDate
     }
@@ -93,14 +94,11 @@ struct GridTrackerFooterView: View {
   func onNextChevron() {
     appState.selectedYear += 1
     if appState.selectedYear != appState.currentYear {
-      appState.selectedDate = Calendar.current
-        .date(
-          from: DateComponents(
-            year: appState.selectedYear,
-            month: 1,
-            day: 1
-          )
-        )!
+      appState.selectedDate = DateOnly(
+        day: 1,
+        month: 1,
+        year: appState.selectedYear
+      )
     } else {
       appState.selectedDate = appState.currentDate
     }
@@ -109,7 +107,7 @@ struct GridTrackerFooterView: View {
   func getDaysRemaining() {
     let daysInSelectedYear = appState.calculateDaysInSelectedYear()
     if appState.selectedYear == appState.currentYear {
-      daysRemaining = daysInSelectedYear - appState.currentDate.dayOfYear
+      daysRemaining = daysInSelectedYear - appState.currentDate.dayOfYear()
     } else {
       daysRemaining = daysInSelectedYear
     }
@@ -120,4 +118,5 @@ struct GridTrackerFooterView: View {
 #Preview {
   GridTrackerFooterView(showBorder: true)
     .environment(AppState.shared)
+    .environment(UserStats.shared)
 }
