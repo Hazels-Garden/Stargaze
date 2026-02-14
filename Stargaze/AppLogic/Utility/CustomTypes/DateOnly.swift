@@ -45,6 +45,6 @@ struct DateOnly: Codable, Hashable, Comparable {
     let date = Date.from(
       dateOnly: DateOnly(day: self.day, month: self.month, year:self.year)
     )
-    return date?.dayOfYear ?? -1
+    return date?.dayOfYear ?? 1
   }
 }
