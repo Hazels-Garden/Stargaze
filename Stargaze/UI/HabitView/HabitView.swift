@@ -12,6 +12,7 @@ import SwiftUI
 struct HabitView: View {
 
   @State var isPresented: Bool = false
+  // TODO: Add a ONLY full detent user setting by making default .full
   @State var selectedDetent: Detent.DetentEnum = .peek
 
   let habit: Habit
@@ -46,7 +47,7 @@ struct HabitView: View {
             horizontalPadding: canvasHorizontalPadding,
             verticalPadding: canvasVerticalPadding,
           )
-          .padding(.bottom, canvasVerticalPadding / 2)
+          
           GridTrackerView(
             viewModel: GridTrackerViewModel(
               habit: habit,
@@ -74,28 +75,29 @@ struct HabitView: View {
       isPresented: $isPresented,
       selectedDetent: $selectedDetent
     ) { selectedDetentEnum in
-      ZStack{
+      ZStack {
         if selectedDetentEnum.wrappedValue == .peek {
-          Text(
-            ""
-          )
+          PeekSheetView(habit: habit, showBorder: showBorder)
             .transition(
-              .offset(x:0, y: -Detent.peekHeight)
-              .combined(with: .blurReplace)
-              .combined(with: .opacity)
+              .offset(x: 0, y: -Detent.peekHeight)
+                .combined(with: .blurReplace)
+                .combined(with: .opacity)
             )
         } else if selectedDetentEnum.wrappedValue == .full {
-          Text("")
-            .transition(
-              .offset(x: 0, y: Detent.peekHeight)
+          FullSheetView()
+          .transition(
+            .offset(x: 0, y: Detent.peekHeight)
               .combined(with: .blurReplace)
               .combined(with: .opacity)
-            )
+          )
         }
       }
-      .ignoresSafeArea()
-      .padding(.all, 24)
-      .animation(.spring(duration: 1), value: selectedDetentEnum.wrappedValue)
+      .padding(.top, 20)
+      .padding(.horizontal, 12)
+      .animation(
+        .spring(duration: 0.75),
+        value: selectedDetentEnum.wrappedValue
+      )
     }
   }
 }
@@ -105,4 +107,5 @@ struct HabitView: View {
     habit: Habit(color: ["hue": 0.8722, "sat": 0.81, "bri": 0.65, "opa": 1])
   )
   .environment(AppState.shared)
+  .environment(UserStats.shared)
 }
