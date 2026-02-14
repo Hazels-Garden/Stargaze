@@ -84,7 +84,7 @@ struct UserStatsTests {
     userStats.miniInitalizeUserStats(habit: testingData[0])
     userStats.getHabitStartDate()
     #expect(
-      userStats.habitStartDate == Date.from(year: 2025, month: 1, day: 1)!
+      userStats.habitStartDate == DateOnly(day: 1, month: 1, year: 2025)
     )
   }
 
